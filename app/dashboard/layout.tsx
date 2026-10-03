@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -76,6 +76,18 @@ export default function DashboardLayout({
     { href: "/dashboard/settings", label: "Settings & Billing", icon: Settings },
   ];
 
+  // Close dropdowns on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOrgDropdownOpen(false);
+        setIsNotifDropdownOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col md:flex-row relative selection:bg-primary selection:text-primary-foreground">
       {/* Background ambient lighting */}
@@ -91,7 +103,7 @@ export default function DashboardLayout({
                 setIsOrgDropdownOpen(!isOrgDropdownOpen);
                 setIsNotifDropdownOpen(false);
               }}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl border border-zinc-700/60 bg-gradient-to-br from-zinc-800/80 to-zinc-900/90 hover:border-zinc-600 text-left transition-all shadow-md group"
+              className="w-full flex items-center justify-between p-2.5 rounded-xl border border-zinc-700/60 bg-gradient-to-br from-zinc-800/80 to-zinc-900/90 hover:border-zinc-600 text-left transition-all shadow-md group relative z-50"
             >
               <div className="flex items-center gap-2.5 truncate">
                 <div className="h-8 w-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs shadow-md shadow-primary/30 group-hover:scale-105 transition-transform">
@@ -110,27 +122,34 @@ export default function DashboardLayout({
               <ChevronDown className="h-4 w-4 text-zinc-400 shrink-0" />
             </button>
 
+            {/* Click-outside backdrop for Org Dropdown */}
             {isOrgDropdownOpen && (
-              <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-xl p-1.5 shadow-2xl space-y-1">
-                <p className="text-[10px] font-bold text-zinc-500 uppercase px-2 py-1">
-                  Tenant Organizations
-                </p>
-                {orgs.map((org) => (
-                  <button
-                    key={org}
-                    onClick={() => {
-                      setCurrentOrg(org);
-                      setIsOrgDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center justify-between px-2.5 py-2 text-xs rounded-lg hover:bg-zinc-800 text-left text-zinc-200 transition-colors"
-                  >
-                    <span>{org}</span>
-                    {org === currentOrg && (
-                      <Check className="h-3.5 w-3.5 text-primary" />
-                    )}
-                  </button>
-                ))}
-              </div>
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsOrgDropdownOpen(false)}
+                />
+                <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-xl p-1.5 shadow-2xl space-y-1 animate-in fade-in">
+                  <p className="text-[10px] font-bold text-zinc-500 uppercase px-2 py-1">
+                    Tenant Organizations
+                  </p>
+                  {orgs.map((org) => (
+                    <button
+                      key={org}
+                      onClick={() => {
+                        setCurrentOrg(org);
+                        setIsOrgDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-2.5 py-2 text-xs rounded-lg hover:bg-zinc-800 text-left text-zinc-200 transition-colors"
+                    >
+                      <span>{org}</span>
+                      {org === currentOrg && (
+                        <Check className="h-3.5 w-3.5 text-primary" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </>
             )}
           </div>
 
@@ -214,8 +233,11 @@ export default function DashboardLayout({
             {/* Notifications Bell with 3D Dropdown */}
             <div className="relative">
               <button
-                onClick={() => setIsNotifDropdownOpen(!isNotifDropdownOpen)}
-                className="relative p-2 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 text-zinc-400 hover:text-zinc-100 transition-colors shadow-sm"
+                onClick={() => {
+                  setIsNotifDropdownOpen(!isNotifDropdownOpen);
+                  setIsOrgDropdownOpen(false);
+                }}
+                className="relative p-2 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 text-zinc-400 hover:text-zinc-100 transition-colors shadow-sm relative z-50"
                 title="Notifications"
               >
                 <Bell className="h-4 w-4" />
@@ -226,63 +248,70 @@ export default function DashboardLayout({
                 )}
               </button>
 
+              {/* Click-outside backdrop for Bell Dropdown */}
               {isNotifDropdownOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-800 bg-zinc-950/95 backdrop-blur-2xl p-4 shadow-2xl space-y-3 z-50 animate-in fade-in zoom-in-95">
-                  <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-zinc-100">
-                        Recent Alerts
-                      </span>
-                      {unreadCount > 0 && (
-                        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-primary/20 text-primary border border-primary/30">
-                          {unreadCount} new
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsNotifDropdownOpen(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-800 bg-zinc-950/95 backdrop-blur-2xl p-4 shadow-2xl space-y-3 z-50 animate-in fade-in zoom-in-95">
+                    <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-zinc-100">
+                          Recent Alerts
                         </span>
-                      )}
+                        {unreadCount > 0 && (
+                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-primary/20 text-primary border border-primary/30">
+                            {unreadCount} new
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => setUnreadCount(0)}
+                        className="text-[11px] text-zinc-400 hover:text-zinc-200 font-semibold transition-colors"
+                      >
+                        Mark read
+                      </button>
                     </div>
-                    <button
-                      onClick={() => setUnreadCount(0)}
-                      className="text-[11px] text-zinc-400 hover:text-zinc-200 font-semibold transition-colors"
-                    >
-                      Mark read
-                    </button>
-                  </div>
 
-                  <div className="space-y-2">
-                    {quickNotifications.map((notif) => {
-                      const Icon = notif.icon;
-                      return (
-                        <div
-                          key={notif.id}
-                          className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-zinc-900/80 transition-colors cursor-pointer"
-                          onClick={() => setIsNotifDropdownOpen(false)}
-                        >
-                          <div className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 shrink-0">
-                            <Icon className={`h-3.5 w-3.5 ${notif.color}`} />
+                    <div className="space-y-2">
+                      {quickNotifications.map((notif) => {
+                        const Icon = notif.icon;
+                        return (
+                          <div
+                            key={notif.id}
+                            className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-zinc-900/80 transition-colors cursor-pointer"
+                            onClick={() => setIsNotifDropdownOpen(false)}
+                          >
+                            <div className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 shrink-0">
+                              <Icon className={`h-3.5 w-3.5 ${notif.color}`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-zinc-200 truncate">
+                                {notif.title}
+                              </p>
+                              <span className="text-[10px] text-zinc-500 font-mono">
+                                {notif.time}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-zinc-200 truncate">
-                              {notif.title}
-                            </p>
-                            <span className="text-[10px] text-zinc-500 font-mono">
-                              {notif.time}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
 
-                  <div className="pt-2 border-t border-zinc-800 flex justify-between items-center text-xs">
-                    <Link
-                      href="/dashboard/notifications"
-                      onClick={() => setIsNotifDropdownOpen(false)}
-                      className="w-full text-center py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold border border-primary/20 transition-all flex items-center justify-center gap-1.5"
-                    >
-                      <span>Open Notification Center</span>
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </Link>
+                    <div className="pt-2 border-t border-zinc-800 flex justify-between items-center text-xs">
+                      <Link
+                        href="/dashboard/notifications"
+                        onClick={() => setIsNotifDropdownOpen(false)}
+                        className="w-full text-center py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold border border-primary/20 transition-all flex items-center justify-center gap-1.5"
+                      >
+                        <span>Open Notification Center</span>
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 

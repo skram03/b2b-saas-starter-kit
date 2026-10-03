@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,11 +14,14 @@ import {
   ExternalLink,
   Download,
   AlertTriangle,
-  RefreshCw,
   Zap,
   ArrowRight,
   X,
   FileText,
+  Clock,
+  Layers,
+  ChevronRight,
+  Lock,
 } from "lucide-react";
 import { updatePlanAction, cancelSubscriptionAction } from "@/app/actions/billing";
 
@@ -27,7 +30,6 @@ interface Invoice {
   date: string;
   amount: string;
   status: "Paid" | "Pending";
-  pdfUrl: string;
 }
 
 export default function SettingsPage() {
@@ -38,6 +40,7 @@ export default function SettingsPage() {
 
   // Subscription Management Modal State
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
+  const [activeModalTab, setActiveModalTab] = useState<"plans" | "invoices" | "cancel">("plans");
   const [currentPlan, setCurrentPlan] = useState<"starter" | "pro" | "scale">("pro");
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
   const [isUpdatingPlan, setIsUpdatingPlan] = useState(false);
@@ -47,28 +50,22 @@ export default function SettingsPage() {
 
   // Invoices list
   const [invoices] = useState<Invoice[]>([
-    {
-      id: "INV-2026-003",
-      date: "Oct 1, 2026",
-      amount: "$149.00",
-      status: "Paid",
-      pdfUrl: "#",
-    },
-    {
-      id: "INV-2026-002",
-      date: "Sep 1, 2026",
-      amount: "$149.00",
-      status: "Paid",
-      pdfUrl: "#",
-    },
-    {
-      id: "INV-2026-001",
-      date: "Aug 1, 2026",
-      amount: "$149.00",
-      status: "Paid",
-      pdfUrl: "#",
-    },
+    { id: "INV-2026-003", date: "Oct 1, 2026", amount: "$149.00", status: "Paid" },
+    { id: "INV-2026-002", date: "Sep 1, 2026", amount: "$149.00", status: "Paid" },
+    { id: "INV-2026-001", date: "Aug 1, 2026", amount: "$149.00", status: "Paid" },
   ]);
+
+  // Close modals on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsManageModalOpen(false);
+        setIsCancelModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,15 +80,16 @@ export default function SettingsPage() {
   };
 
   const handlePlanChange = async (newPlan: "starter" | "pro" | "scale") => {
+    if (newPlan === currentPlan) return;
     setIsUpdatingPlan(true);
     const tierName = newPlan === "scale" ? "enterprise" : newPlan;
     await updatePlanAction("acme-corp-uuid", tierName, billingCycle);
     setTimeout(() => {
       setCurrentPlan(newPlan);
       setIsUpdatingPlan(false);
-      setPortalMessage(`Successfully switched plan to ${newPlan.toUpperCase()}!`);
-      setTimeout(() => setPortalMessage(null), 3000);
-    }, 600);
+      setPortalMessage(`Subscription switched to ${newPlan.toUpperCase()} tier!`);
+      setTimeout(() => setPortalMessage(null), 3500);
+    }, 500);
   };
 
   const handleOpenCustomerPortal = async () => {
@@ -103,19 +101,16 @@ export default function SettingsPage() {
       });
       const data = await res.json();
       if (data.url) {
-        setPortalMessage(
-          "LemonSqueezy customer portal session created! Opening billing dashboard..."
-        );
+        setPortalMessage("Customer portal active. Opening in new tab...");
         window.open(data.url, "_blank");
       }
     } catch {
-      setPortalMessage("Redirecting to LemonSqueezy customer portal...");
+      setPortalMessage("Redirecting to LemonSqueezy / Stripe billing portal...");
     }
   };
 
   const handleDownloadInvoice = (invoice: Invoice) => {
-    // Generate text/csv receipt for browser download
-    const receiptContent = `========================================================\nNEXUSB2B SAAS BOILERPLATE - OFFICIAL INVOICE RECEIPT\n========================================================\nInvoice ID: ${invoice.id}\nDate: ${invoice.date}\nCustomer: Acme Industrial Corp (acme-corp)\nPayment Gateway: LemonSqueezy / Stripe\nAmount Paid: ${invoice.amount} USD\nStatus: ${invoice.status}\nCard: Mastercard ending in •••• 4242\nAuth Code: AUTH_LS_9941092\n========================================================\nThank you for your business!`;
+    const receiptContent = `========================================================\nNEXUSB2B SAAS BOILERPLATE - OFFICIAL INVOICE RECEIPT\n========================================================\nInvoice ID: ${invoice.id}\nDate: ${invoice.date}\nCustomer: Acme Industrial Corp (acme-corp)\nPayment Gateway: LemonSqueezy / Stripe\nAmount Paid: ${invoice.amount} USD\nStatus: ${invoice.status}\nCard: Mastercard ending in •••• 4242\nAuth Code: AUTH_LS_9941092\n========================================================\nThank you for choosing NexusB2B!`;
 
     const blob = new Blob([receiptContent], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -132,18 +127,17 @@ export default function SettingsPage() {
     await cancelSubscriptionAction("acme-corp-uuid");
     setIsCanceled(true);
     setIsCancelModalOpen(false);
-    setPortalMessage("Subscription scheduled for cancellation at period end.");
+    setPortalMessage("Subscription scheduled for cancellation at the end of the billing period.");
   };
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       {/* Toast Alert */}
       {portalMessage && (
-        <div className="p-3.5 bg-primary/20 border border-primary/40 text-primary-foreground text-xs font-semibold rounded-xl flex items-center justify-between shadow-lg">
-          <span className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" /> {portalMessage}
-          </span>
-          <button onClick={() => setPortalMessage(null)} className="text-zinc-400 hover:text-zinc-200">
+        <div className="fixed top-20 right-6 z-50 p-4 bg-zinc-900 border border-primary/40 text-zinc-100 text-xs font-semibold rounded-2xl flex items-center gap-3 shadow-2xl animate-in fade-in slide-in-from-top-4">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <span>{portalMessage}</span>
+          <button onClick={() => setPortalMessage(null)} className="ml-2 text-zinc-500 hover:text-zinc-300">
             <X className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -162,7 +156,7 @@ export default function SettingsPage() {
 
       {/* 3D Black Titanium Membership Card */}
       <div className="relative group [perspective:1000px]">
-        <div className="relative rounded-3xl border border-zinc-700/80 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-800 p-8 shadow-2xl backdrop-blur-xl overflow-hidden transition-transform duration-500 hover:[transform:rotateX(3deg)_rotateY(-2deg)]">
+        <div className="relative rounded-3xl border border-zinc-700/80 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-800 p-8 shadow-2xl backdrop-blur-xl overflow-hidden transition-transform duration-500 hover:[transform:rotateX(2deg)_rotateY(-2deg)]">
           {/* Holographic Sheen */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary/25 via-indigo-500/10 to-transparent blur-3xl pointer-events-none" />
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
@@ -174,10 +168,10 @@ export default function SettingsPage() {
               </span>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-50 mt-1 capitalize">
                 {currentPlan === "starter"
-                  ? "Starter Team License"
+                  ? "Starter Team Tier"
                   : currentPlan === "pro"
-                  ? "Pro Enterprise License"
-                  : "Scale Global License"}
+                  ? "Pro Enterprise Tier"
+                  : "Scale Global Tier"}
               </h2>
               <div className="flex items-baseline gap-2 mt-3">
                 <span className="text-4xl font-extrabold text-zinc-100">
@@ -298,238 +292,407 @@ export default function SettingsPage() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 3D MANAGE SUBSCRIPTION MODAL */}
+      {/* 3D MANAGE SUBSCRIPTION MODAL - CLEAN, UNCLUTTERED, PROFESSIONAL DESIGN */}
       {/* ========================================================================= */}
       {isManageModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-3xl border border-zinc-700 bg-zinc-950 p-6 sm:p-8 shadow-2xl space-y-6 text-zinc-100 max-h-[90vh] overflow-y-auto">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in"
+          onClick={() => setIsManageModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-3xl rounded-3xl border border-zinc-700 bg-zinc-950 p-6 sm:p-8 shadow-2xl text-zinc-100 space-y-6 max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-zinc-800 pb-4">
+            <div className="flex items-start justify-between border-b border-zinc-800/80 pb-4">
               <div>
-                <span className="text-xs font-mono font-bold text-primary uppercase">
-                  LemonSqueezy &amp; Stripe Billing Center
-                </span>
-                <h2 className="text-xl sm:text-2xl font-black text-zinc-50 mt-1">
-                  Manage Organization Subscription
+                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-primary text-[11px] font-mono font-bold">
+                  <CreditCard className="h-3 w-3" /> Billing Management Portal
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-zinc-50 mt-1.5">
+                  Subscription &amp; Plans
                 </h2>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  Change plan tiers, update payment card, or open customer self-service portal.
+                  Select your license tier, review receipts, or open LemonSqueezy / Stripe portal.
                 </p>
               </div>
+
               <button
                 onClick={() => setIsManageModalOpen(false)}
-                className="p-1 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900"
+                className="p-1.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+                title="Close (Esc)"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
-            {/* Billing Interval Switcher */}
-            <div className="flex items-center justify-center gap-2 p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 w-fit mx-auto">
+            {/* Modal Navigation Tabs */}
+            <div className="flex items-center gap-2 border-b border-zinc-800/80 pb-2">
               <button
-                onClick={() => setBillingCycle("monthly")}
-                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  billingCycle === "monthly"
+                onClick={() => setActiveModalTab("plans")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  activeModalTab === "plans"
                     ? "bg-primary text-white shadow-md shadow-primary/30"
-                    : "text-zinc-400 hover:text-zinc-200"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900"
                 }`}
               >
-                Monthly Billing
+                <Layers className="h-3.5 w-3.5" /> Plans &amp; Tiers
               </button>
               <button
-                onClick={() => setBillingCycle("annual")}
-                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-                  billingCycle === "annual"
+                onClick={() => setActiveModalTab("invoices")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                  activeModalTab === "invoices"
                     ? "bg-primary text-white shadow-md shadow-primary/30"
-                    : "text-zinc-400 hover:text-zinc-200"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900"
                 }`}
               >
-                <span>Annual Billing</span>
-                <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400/20 text-emerald-400 border border-emerald-400/30">
-                  SAVE 20%
-                </span>
+                <FileText className="h-3.5 w-3.5" /> Invoices &amp; Receipts
+              </button>
+              <button
+                onClick={() => setActiveModalTab("cancel")}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ml-auto ${
+                  activeModalTab === "cancel"
+                    ? "bg-rose-950/60 text-rose-300 border border-rose-800"
+                    : "text-zinc-500 hover:text-rose-400"
+                }`}
+              >
+                Cancel / Pause
               </button>
             </div>
 
-            {/* 3 Tier Plan Cards */}
-            <div className="grid sm:grid-cols-3 gap-3.5">
-              {/* Starter */}
-              <div
-                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
-                  currentPlan === "starter"
-                    ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
-                    : "border-zinc-800 bg-zinc-900/60 hover:border-zinc-700"
-                }`}
-              >
-                <div>
-                  <span className="text-xs font-bold text-zinc-300">Starter</span>
-                  <div className="text-xl font-black text-zinc-100 mt-1">
-                    {billingCycle === "monthly" ? "$29" : "$290"}
-                    <span className="text-xs font-normal text-zinc-400">
-                      /{billingCycle === "monthly" ? "mo" : "yr"}
-                    </span>
+            {/* TAB 1: PLANS & TIERS */}
+            {activeModalTab === "plans" && (
+              <div className="space-y-6">
+                {/* Billing Interval Toggle */}
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800">
+                  <div>
+                    <p className="text-xs font-bold text-zinc-200">Billing Cadence</p>
+                    <p className="text-[11px] text-zinc-500">Choose monthly or save with an annual commitment</p>
                   </div>
-                  <ul className="mt-3 space-y-1.5 text-[11px] text-zinc-400">
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> 5 Team Seats
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> 10k Records
-                    </li>
-                  </ul>
-                </div>
-                <Button
-                  size="sm"
-                  variant={currentPlan === "starter" ? "outline" : "default"}
-                  disabled={currentPlan === "starter" || isUpdatingPlan}
-                  onClick={() => handlePlanChange("starter")}
-                  className="mt-4 w-full text-xs font-bold"
-                >
-                  {currentPlan === "starter" ? "Current Plan" : "Downgrade"}
-                </Button>
-              </div>
-
-              {/* Pro Enterprise (Current) */}
-              <div
-                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between relative ${
-                  currentPlan === "pro"
-                    ? "border-primary bg-primary/15 shadow-xl shadow-primary/20"
-                    : "border-zinc-800 bg-zinc-900/60 hover:border-zinc-700"
-                }`}
-              >
-                <div className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-primary text-[9px] font-bold text-white tracking-wider">
-                  RECOMMENDED
-                </div>
-                <div>
-                  <span className="text-xs font-bold text-primary">Pro Enterprise</span>
-                  <div className="text-xl font-black text-zinc-100 mt-1">
-                    {billingCycle === "monthly" ? "$149" : "$1,490"}
-                    <span className="text-xs font-normal text-zinc-400">
-                      /{billingCycle === "monthly" ? "mo" : "yr"}
-                    </span>
-                  </div>
-                  <ul className="mt-3 space-y-1.5 text-[11px] text-zinc-300">
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> Unlimited Seats
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> Full RLS Isolation
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> Webhook Engine
-                    </li>
-                  </ul>
-                </div>
-                <Button
-                  size="sm"
-                  variant={currentPlan === "pro" ? "outline" : "default"}
-                  disabled={currentPlan === "pro" || isUpdatingPlan}
-                  onClick={() => handlePlanChange("pro")}
-                  className="mt-4 w-full text-xs font-bold"
-                >
-                  {currentPlan === "pro" ? "Current Plan" : "Select Pro"}
-                </Button>
-              </div>
-
-              {/* Scale */}
-              <div
-                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between ${
-                  currentPlan === "scale"
-                    ? "border-primary bg-primary/10 shadow-lg shadow-primary/10"
-                    : "border-zinc-800 bg-zinc-900/60 hover:border-zinc-700"
-                }`}
-              >
-                <div>
-                  <span className="text-xs font-bold text-zinc-300">Scale Global</span>
-                  <div className="text-xl font-black text-zinc-100 mt-1">
-                    {billingCycle === "monthly" ? "$399" : "$3,990"}
-                    <span className="text-xs font-normal text-zinc-400">
-                      /{billingCycle === "monthly" ? "mo" : "yr"}
-                    </span>
-                  </div>
-                  <ul className="mt-3 space-y-1.5 text-[11px] text-zinc-400">
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> 99.99% SLA
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <Check className="h-3 w-3 text-emerald-400" /> Dedicated Cluster
-                    </li>
-                  </ul>
-                </div>
-                <Button
-                  size="sm"
-                  variant={currentPlan === "scale" ? "outline" : "default"}
-                  disabled={currentPlan === "scale" || isUpdatingPlan}
-                  onClick={() => handlePlanChange("scale")}
-                  className="mt-4 w-full text-xs font-bold"
-                >
-                  {currentPlan === "scale" ? "Current Plan" : "Upgrade"}
-                </Button>
-              </div>
-            </div>
-
-            {/* Invoices List */}
-            <div className="space-y-3 pt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-300">Recent Invoices &amp; Receipts</span>
-                <span className="text-[10px] text-zinc-500">Auto-generated via LemonSqueezy</span>
-              </div>
-              <div className="rounded-xl border border-zinc-800 overflow-hidden divide-y divide-zinc-800 bg-zinc-900/40">
-                {invoices.map((inv) => (
-                  <div
-                    key={inv.id}
-                    className="flex items-center justify-between p-3 text-xs hover:bg-zinc-800/40 transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <FileText className="h-4 w-4 text-primary" />
-                      <div>
-                        <p className="font-semibold text-zinc-200">{inv.id}</p>
-                        <p className="text-[10px] text-zinc-500">{inv.date}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="font-mono text-zinc-200">{inv.amount}</span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/60 border border-emerald-800 text-emerald-400">
-                        {inv.status}
+                  <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-950 border border-zinc-800">
+                    <button
+                      onClick={() => setBillingCycle("monthly")}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                        billingCycle === "monthly"
+                          ? "bg-zinc-800 text-zinc-100 shadow-sm"
+                          : "text-zinc-400 hover:text-zinc-200"
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                    <button
+                      onClick={() => setBillingCycle("annual")}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        billingCycle === "annual"
+                          ? "bg-primary text-white shadow-sm"
+                          : "text-zinc-400 hover:text-zinc-200"
+                      }`}
+                    >
+                      <span>Annual</span>
+                      <span className="px-1.5 py-0.2 rounded-md bg-emerald-400/20 text-emerald-400 text-[10px] font-bold">
+                        -20%
                       </span>
-                      <button
-                        onClick={() => handleDownloadInvoice(inv)}
-                        className="p-1 rounded-md hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
-                        title="Download Receipt"
-                      >
-                        <Download className="h-3.5 w-3.5" />
-                      </button>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3 Spacious Tier Cards */}
+                <div className="grid md:grid-cols-3 gap-4">
+                  {/* Starter Tier */}
+                  <div
+                    className={`rounded-2xl border p-5 flex flex-col justify-between transition-all ${
+                      currentPlan === "starter"
+                        ? "border-emerald-500/50 bg-emerald-950/15 shadow-lg shadow-emerald-950/30"
+                        : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-zinc-300">Starter</span>
+                        {currentPlan === "starter" && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400/20 text-emerald-400 border border-emerald-400/30">
+                            Active
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-3">
+                        <span className="text-3xl font-black text-zinc-100">
+                          {billingCycle === "monthly" ? "$29" : "$290"}
+                        </span>
+                        <span className="text-xs text-zinc-400 font-medium ml-1">
+                          /{billingCycle === "monthly" ? "mo" : "yr"}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-zinc-500 mt-1">For early startups and individual builders</p>
+
+                      <ul className="mt-4 space-y-2 text-xs text-zinc-300 border-t border-zinc-800/80 pt-3">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>5 Team Seats</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>10,000 DB Records</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>Community Support</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <Button
+                      size="sm"
+                      variant={currentPlan === "starter" ? "outline" : "default"}
+                      disabled={currentPlan === "starter" || isUpdatingPlan}
+                      onClick={() => handlePlanChange("starter")}
+                      className="mt-6 w-full text-xs font-bold"
+                    >
+                      {currentPlan === "starter" ? "Current Plan" : "Switch to Starter"}
+                    </Button>
+                  </div>
+
+                  {/* Pro Enterprise Tier (Recommended) */}
+                  <div
+                    className={`rounded-2xl border p-5 flex flex-col justify-between transition-all relative ${
+                      currentPlan === "pro"
+                        ? "border-primary bg-primary/10 shadow-xl shadow-primary/15"
+                        : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
+                    }`}
+                  >
+                    <div className="absolute -top-2.5 right-4 px-2.5 py-0.5 rounded-full bg-primary text-[9px] font-bold text-white tracking-wider uppercase shadow-md shadow-primary/40">
+                      RECOMMENDED
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-primary">Pro Enterprise</span>
+                        {currentPlan === "pro" && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400/20 text-emerald-400 border border-emerald-400/30">
+                            Active
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-3">
+                        <span className="text-3xl font-black text-zinc-100">
+                          {billingCycle === "monthly" ? "$149" : "$1,490"}
+                        </span>
+                        <span className="text-xs text-zinc-400 font-medium ml-1">
+                          /{billingCycle === "monthly" ? "mo" : "yr"}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-zinc-400 mt-1">Full commercial B2B deployment power</p>
+
+                      <ul className="mt-4 space-y-2 text-xs text-zinc-200 border-t border-zinc-800/80 pt-3">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>Unlimited Team Seats</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>Postgres RLS Multi-Tenant</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>Webhook Stream Engine</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>Priority 24/7 Support</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <Button
+                      size="sm"
+                      variant={currentPlan === "pro" ? "outline" : "default"}
+                      disabled={currentPlan === "pro" || isUpdatingPlan}
+                      onClick={() => handlePlanChange("pro")}
+                      className="mt-6 w-full text-xs font-bold bg-primary hover:bg-blue-600 text-white shadow-lg shadow-primary/25"
+                    >
+                      {currentPlan === "pro" ? "Current Plan" : "Upgrade to Pro"}
+                    </Button>
+                  </div>
+
+                  {/* Scale Global Tier */}
+                  <div
+                    className={`rounded-2xl border p-5 flex flex-col justify-between transition-all ${
+                      currentPlan === "scale"
+                        ? "border-emerald-500/50 bg-emerald-950/15 shadow-lg shadow-emerald-950/30"
+                        : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-zinc-300">Scale Global</span>
+                        {currentPlan === "scale" && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400/20 text-emerald-400 border border-emerald-400/30">
+                            Active
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-3">
+                        <span className="text-3xl font-black text-zinc-100">
+                          {billingCycle === "monthly" ? "$399" : "$3,990"}
+                        </span>
+                        <span className="text-xs text-zinc-400 font-medium ml-1">
+                          /{billingCycle === "monthly" ? "mo" : "yr"}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-zinc-500 mt-1">Mission-critical high volume operations</p>
+
+                      <ul className="mt-4 space-y-2 text-xs text-zinc-300 border-t border-zinc-800/80 pt-3">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>Dedicated PostgreSQL Cluster</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>99.99% Guaranteed SLA</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                          <span>White-Label Branding</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <Button
+                      size="sm"
+                      variant={currentPlan === "scale" ? "outline" : "default"}
+                      disabled={currentPlan === "scale" || isUpdatingPlan}
+                      onClick={() => handlePlanChange("scale")}
+                      className="mt-6 w-full text-xs font-bold"
+                    >
+                      {currentPlan === "scale" ? "Current Plan" : "Upgrade to Scale"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: INVOICES & PAYMENT METHOD */}
+            {activeModalTab === "invoices" && (
+              <div className="space-y-6">
+                {/* Payment Method Preview */}
+                <div className="p-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-12 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center font-bold text-xs text-zinc-300">
+                      MC
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-zinc-200">Mastercard ending in 4242</p>
+                      <p className="text-[10px] text-zinc-500">Expires 12/2028 • Default billing method</p>
                     </div>
                   </div>
-                ))}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleOpenCustomerPortal}
+                    className="border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs"
+                  >
+                    Update Card
+                  </Button>
+                </div>
+
+                {/* Invoices List */}
+                <div className="space-y-2">
+                  <span className="text-xs font-bold text-zinc-300">Historical Invoices</span>
+                  <div className="rounded-2xl border border-zinc-800 overflow-hidden divide-y divide-zinc-800 bg-zinc-900/40">
+                    {invoices.map((inv) => (
+                      <div
+                        key={inv.id}
+                        className="flex items-center justify-between p-3.5 text-xs hover:bg-zinc-800/40 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FileText className="h-4 w-4 text-primary" />
+                          <div>
+                            <p className="font-semibold text-zinc-200">{inv.id}</p>
+                            <p className="text-[10px] text-zinc-500">{inv.date}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-zinc-200 font-semibold">{inv.amount}</span>
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/60 border border-emerald-800 text-emerald-400">
+                            {inv.status}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDownloadInvoice(inv)}
+                            className="h-8 px-2 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 gap-1 text-xs"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            <span>Download</span>
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Portal Redirection & Actions */}
-            <div className="pt-4 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <button
-                onClick={() => setIsCancelModalOpen(true)}
-                className="text-xs text-rose-400 hover:text-rose-300 font-semibold transition-colors"
+            {/* TAB 3: CANCEL OR PAUSE */}
+            {activeModalTab === "cancel" && (
+              <div className="p-6 rounded-2xl border border-rose-900/50 bg-rose-950/10 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                    <AlertTriangle className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-zinc-100">Need to pause or cancel?</h3>
+                    <p className="text-xs text-zinc-400 mt-0.5">
+                      You can downgrade your subscription to the Starter tier (\$29/mo) anytime without losing your PostgreSQL data.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      handlePlanChange("starter");
+                      setActiveModalTab("plans");
+                    }}
+                    className="w-full sm:w-auto border-zinc-700 bg-zinc-900 text-xs font-semibold"
+                  >
+                    Downgrade to Starter (\$29/mo)
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => setIsCancelModalOpen(true)}
+                    className="w-full sm:w-auto text-xs font-bold"
+                  >
+                    Proceed with Cancellation
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Modal Bottom Footer Actions */}
+            <div className="pt-4 border-t border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleOpenCustomerPortal}
+                className="w-full sm:w-auto border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs gap-1.5"
               >
-                Cancel Subscription
-              </button>
+                <span>Launch LemonSqueezy Portal</span>
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Button>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsManageModalOpen(false)}
                   className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs"
                 >
-                  Close
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={handleOpenCustomerPortal}
-                  className="bg-primary hover:bg-blue-600 text-white font-bold text-xs gap-1.5 shadow-lg shadow-primary/30"
-                >
-                  <span>Open Customer Portal</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
+                  Done
                 </Button>
               </div>
             </div>
@@ -541,22 +704,28 @@ export default function SettingsPage() {
       {/* CANCEL SUBSCRIPTION CONFIRMATION MODAL */}
       {/* ========================================================================= */}
       {isCancelModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-md rounded-2xl border border-rose-900/60 bg-zinc-950 p-6 shadow-2xl space-y-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-in fade-in"
+          onClick={() => setIsCancelModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-md rounded-2xl border border-rose-900/60 bg-zinc-950 p-6 shadow-2xl space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
                 <AlertTriangle className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-zinc-100">Cancel Subscription?</h3>
+                <h3 className="text-base font-bold text-zinc-100">Confirm Cancellation</h3>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  Your team will lose access to unlimited seats and live Postgres RLS streaming at the end of the billing cycle.
+                  Are you sure? Your team members will lose unlimited access at the end of the current billing cycle.
                 </p>
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-zinc-300">
-              💡 <strong>Developer Tip:</strong> You can pause your subscription or downgrade to the Starter tier for \$29/month instead of canceling.
+              💡 <strong>Tip:</strong> Your data remains securely preserved under your Supabase tenant schema.
             </div>
 
             <div className="flex justify-end gap-2 pt-2 border-t border-zinc-800">
@@ -566,7 +735,7 @@ export default function SettingsPage() {
                 onClick={() => setIsCancelModalOpen(false)}
                 className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs"
               >
-                Keep Subscription
+                Keep Active
               </Button>
               <Button
                 size="sm"
@@ -574,7 +743,7 @@ export default function SettingsPage() {
                 onClick={handleConfirmCancel}
                 className="font-bold text-xs shadow-md"
               >
-                Confirm Cancellation
+                Confirm Cancel
               </Button>
             </div>
           </div>

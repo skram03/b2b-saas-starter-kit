@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Bell,
   Check,
@@ -107,6 +107,15 @@ export default function NotificationsPage() {
   const [selectedNotification, setSelectedNotification] =
     useState<NotificationItem | null>(null);
   const [bannerToast, setBannerToast] = useState<string | null>(null);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedNotification(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Preference switches
   const [prefs, setPrefs] = useState({
@@ -576,8 +585,14 @@ export default function NotificationsPage() {
 
       {/* Detail Inspection Modal */}
       {selectedNotification && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl space-y-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in"
+          onClick={() => setSelectedNotification(null)}
+        >
+          <div
+            className="relative w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-zinc-900 border border-zinc-800">

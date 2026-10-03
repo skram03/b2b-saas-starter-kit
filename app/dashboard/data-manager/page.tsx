@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { DataTable } from "@/components/shared/data-table/data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { ColumnDef } from "@tanstack/react-table";
@@ -55,6 +55,18 @@ export default function DataManagerPage() {
   // Modals state
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState<ItemRecord | null>(null);
+
+  // Close modals on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsAddModalOpen(false);
+        setEditingRecord(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Add form fields
   const [newTitle, setNewTitle] = useState("");
@@ -441,8 +453,14 @@ export default function DataManagerPage() {
 
       {/* 3D Add Record Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 [perspective:1000px]">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(4deg)]">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in [perspective:1000px]"
+          onClick={() => setIsAddModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(3deg)]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2 font-bold text-base text-zinc-100">
                 <Layers className="h-5 w-5 text-primary" />
@@ -527,8 +545,14 @@ export default function DataManagerPage() {
 
       {/* 3D Edit Record Modal */}
       {editingRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 [perspective:1000px]">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(4deg)]">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in [perspective:1000px]"
+          onClick={() => setEditingRecord(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(3deg)]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2 font-bold text-base text-zinc-100">
                 <Edit3 className="h-5 w-5 text-primary" />

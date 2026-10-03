@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus, ShieldCheck, Mail, X, Users, KeyRound, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,14 @@ export default function TeamPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Member");
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsModalOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleInvite = (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,8 +146,14 @@ export default function TeamPage() {
 
       {/* 3D Invite Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 [perspective:1000px]">
-          <div className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(4deg)]">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in [perspective:1000px]"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(3deg)]"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2 font-bold text-base text-zinc-100">
                 <UserPlus className="h-5 w-5 text-primary" />
