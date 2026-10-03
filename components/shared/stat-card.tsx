@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,35 +22,46 @@ export function StatCard({
   className,
 }: StatCardProps) {
   return (
-    <Card className={cn("overflow-hidden border border-border/60 hover:shadow-md transition-shadow", className)}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-            <Icon className="h-5 w-5" />
-          </div>
+    <div
+      className={cn(
+        "relative group overflow-hidden rounded-2xl border border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 p-6 backdrop-blur-xl shadow-xl transition-all duration-300 hover:[transform:translateY(-4px)] hover:border-zinc-700 hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.25)]",
+        className
+      )}
+    >
+      {/* 3D Specular Highlight Line */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+
+      {/* Subtle radial ambient glow */}
+      <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-primary/10 blur-2xl group-hover:bg-primary/20 transition-all pointer-events-none" />
+
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-zinc-400 tracking-wide uppercase">{title}</p>
+        <div className="h-10 w-10 rounded-xl bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform">
+          <Icon className="h-5 w-5" />
         </div>
-        <div className="mt-4 flex items-baseline gap-2">
-          <span className="text-2xl font-bold tracking-tight text-foreground">{value}</span>
-          {change && (
-            <span
-              className={cn(
-                "inline-flex items-center text-xs font-semibold px-1.5 py-0.5 rounded",
-                trend === "up" && "text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/50",
-                trend === "down" && "text-rose-700 bg-rose-50 dark:text-rose-400 dark:bg-rose-950/50",
-                trend === "neutral" && "text-muted-foreground bg-muted"
-              )}
-            >
-              {trend === "up" && <TrendingUp className="mr-1 h-3 w-3" />}
-              {trend === "down" && <TrendingDown className="mr-1 h-3 w-3" />}
-              {change}
-            </span>
-          )}
-        </div>
-        {description && (
-          <p className="mt-1 text-xs text-muted-foreground">{description}</p>
+      </div>
+
+      <div className="mt-4 flex items-baseline gap-2">
+        <span className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-50">{value}</span>
+        {change && (
+          <span
+            className={cn(
+              "inline-flex items-center text-xs font-bold px-2 py-0.5 rounded-full border shadow-sm",
+              trend === "up" && "text-emerald-400 bg-emerald-950/60 border-emerald-800/60",
+              trend === "down" && "text-rose-400 bg-rose-950/60 border-rose-800/60",
+              trend === "neutral" && "text-zinc-400 bg-zinc-800/60 border-zinc-700/60"
+            )}
+          >
+            {trend === "up" && <TrendingUp className="mr-1 h-3 w-3" />}
+            {trend === "down" && <TrendingDown className="mr-1 h-3 w-3" />}
+            {change}
+          </span>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      {description && (
+        <p className="mt-2 text-xs text-zinc-500 font-medium">{description}</p>
+      )}
+    </div>
   );
 }
