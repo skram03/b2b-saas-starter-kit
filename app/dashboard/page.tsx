@@ -1,5 +1,8 @@
+"use client";
+
+import React from "react";
 import { StatCard } from "@/components/shared/stat-card";
-import { Users, DollarSign, Activity, PackageCheck, ArrowUpRight } from "lucide-react";
+import { Users, DollarSign, Activity, PackageCheck, ArrowUpRight, Plus, Download } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import Link from "next/link";
@@ -13,18 +16,38 @@ export default function DashboardOverviewPage() {
     { id: 4, action: "Invoice generated", entity: "#INV-2026-081", user: "Automated System", status: "pending", time: "5 hours ago" },
   ];
 
+  const handleDownloadReport = () => {
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      ["Event,Entity,Initiator,Status,Timestamp"]
+        .concat(recentActivities.map((a) => `"${a.action}","${a.entity}","${a.user}",${a.status},"${a.time}"`))
+        .join("\n");
+    const link = document.createElement("a");
+    link.href = encodeURI(csvContent);
+    link.download = `executive_kpi_report_${Date.now()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Executive Overview</h1>
           <p className="text-sm text-muted-foreground">
-            Real-time business performance and operational throughput.
+            Real-time business performance, team activity, and operational throughput.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">Download Report</Button>
-          <Button size="sm">Create New Entry</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleDownloadReport} className="gap-1.5">
+            <Download className="h-4 w-4" /> Download Report
+          </Button>
+          <Button size="sm" asChild className="gap-1.5">
+            <Link href="/dashboard/data-manager">
+              <Plus className="h-4 w-4" /> Create New Entry
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -68,8 +91,8 @@ export default function DashboardOverviewPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-base font-semibold">Live Operational Stream</CardTitle>
-          <Link href="#" className="text-xs text-primary hover:underline flex items-center gap-1">
-            View all logs <ArrowUpRight className="h-3 w-3" />
+          <Link href="/dashboard/data-manager" className="text-xs text-primary hover:underline flex items-center gap-1 font-medium">
+            View full data grid <ArrowUpRight className="h-3 w-3" />
           </Link>
         </CardHeader>
         <CardContent>
@@ -79,7 +102,7 @@ export default function DashboardOverviewPage() {
                 <div>
                   <p className="font-medium text-foreground">{act.action}</p>
                   <p className="text-xs text-muted-foreground">
-                    {act.entity} &bull; Triggered by <span className="font-medium">{act.user}</span>
+                    {act.entity} &bull; Triggered by <span className="font-medium text-foreground">{act.user}</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-4">

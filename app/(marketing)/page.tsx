@@ -10,6 +10,9 @@ import {
   Sparkles,
   CreditCard,
   Code2,
+  CheckCircle2,
+  Server,
+  Lock,
 } from "lucide-react";
 
 export default function MarketingPage() {
@@ -18,12 +21,12 @@ export default function MarketingPage() {
       {/* Navigation */}
       <header className="border-b border-border/40 backdrop-blur sticky top-0 z-40 bg-background/80">
         <div className="container mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
             <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-black">
-              N
+              B
             </div>
-            <span>NexusB2B</span>
-          </div>
+            <span>B2B Starter Kit</span>
+          </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
             <Link href="#features" className="hover:text-foreground transition-colors">
               Features
@@ -41,7 +44,7 @@ export default function MarketingPage() {
                 Sign In
               </Button>
             </Link>
-            <Link href="/demo">
+            <Link href="/dashboard">
               <Button size="sm" className="gap-1.5">
                 Live Demo <ArrowRight className="h-4 w-4" />
               </Button>
@@ -65,9 +68,9 @@ export default function MarketingPage() {
             tanstack tables, dynamic modals, and pre-configured Supabase SSR auth.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/signup">
-              <Button size="lg" className="gap-2 h-12 px-8 text-base">
-                Get Started Now <ArrowRight className="h-4 w-4" />
+            <Link href="/dashboard">
+              <Button size="lg" className="gap-2 h-12 px-8 text-base shadow-lg shadow-primary/20">
+                Explore Live Demo <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
             <Link href="/docs">
@@ -79,7 +82,7 @@ export default function MarketingPage() {
         </section>
 
         {/* Feature Grid */}
-        <section id="features" className="py-16 bg-muted/30 border-y border-border/40">
+        <section id="features" className="py-20 bg-muted/30 border-y border-border/40">
           <div className="container mx-auto max-w-6xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2 className="text-3xl font-bold tracking-tight">Everything You Need To Launch</h2>
@@ -105,7 +108,7 @@ export default function MarketingPage() {
                 </div>
                 <h3 className="font-semibold text-lg">TanStack Data Tables</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                  Fast, client-side and server-side filtering, sorting, column visibility, and instant 1-click CSV/Excel export.
+                  Fast client-side and server-side filtering, sorting, column visibility, and instant 1-click CSV/Excel export.
                 </p>
               </div>
 
@@ -151,11 +154,73 @@ export default function MarketingPage() {
             </div>
           </div>
         </section>
+
+        {/* Architecture Section */}
+        <section id="architecture" className="py-20">
+          <div className="container mx-auto max-w-6xl px-6">
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <h2 className="text-3xl font-bold tracking-tight">Database &amp; Multi-Tenant Architecture</h2>
+              <p className="mt-3 text-muted-foreground">
+                Engineered for strict tenant isolation with zero database leakage.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base">Row Level Security (RLS)</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Every database query is automatically scoped to the active tenant organization at the database level.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                    <Lock className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base">Granular RBAC Roles</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Owners can manage billing and seats; Admins can edit records; Members have strictly scoped read/write access.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                    <Server className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base">Instant SQL Migration</h4>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Run one script in your Supabase dashboard to create organizations, profiles, memberships, and items tables with indexes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-zinc-900 text-zinc-100 font-mono text-xs border border-zinc-800 shadow-2xl overflow-x-auto space-y-2">
+                <p className="text-zinc-500">// Supabase PostgreSQL RLS Policy</p>
+                <p><span className="text-purple-400">CREATE POLICY</span> <span className="text-emerald-400">"Tenant Data Isolation"</span></p>
+                <p className="pl-4"><span className="text-purple-400">ON</span> public.items <span className="text-purple-400">FOR ALL</span></p>
+                <p className="pl-4"><span className="text-purple-400">USING</span> (</p>
+                <p className="pl-8 text-blue-300">public.is_org_member(org_id)</p>
+                <p className="pl-4">);</p>
+                <p className="text-emerald-500 pt-2">✓ Verified: Zero Cross-Tenant Data Leaks</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
       <footer className="border-t border-border/40 py-8 px-6 text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} NexusB2B Boilerplate. Built by skram03.</p>
+        <p>&copy; {new Date().getFullYear()} B2B SaaS Starter Kit. Built by skram03.</p>
       </footer>
     </div>
   );

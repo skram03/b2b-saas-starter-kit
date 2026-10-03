@@ -1,10 +1,22 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { CreditCard, Check, AlertCircle } from "lucide-react";
 
 export default function SettingsPage() {
+  const [companyName, setCompanyName] = useState("Acme Industrial Corp");
+  const [slug, setSlug] = useState("acme-corp");
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 3000);
+  };
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
@@ -44,9 +56,14 @@ export default function SettingsPage() {
             </li>
           </ul>
         </CardContent>
-        <CardFooter className="border-t bg-muted/20 flex justify-between">
+        <CardFooter className="border-t bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">Next billing date: November 1, 2026</p>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => alert("Redirecting to LemonSqueezy / Stripe Customer Portal...")}
+            className="gap-2"
+          >
             <CreditCard className="h-4 w-4" /> Manage in LemonSqueezy
           </Button>
         </CardFooter>
@@ -56,24 +73,39 @@ export default function SettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">General Information</CardTitle>
-          <CardDescription>Update your company name and tenant slug.</CardDescription>
+          <CardDescription>Update your company name and workspace slug.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Company Legal Name</label>
-            <Input defaultValue="Acme Industrial Corp" />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Workspace Slug</label>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">app.nexusb2b.com/</span>
-              <Input defaultValue="acme-corp" className="flex-1" />
+        <form onSubmit={handleSave}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Company Legal Name</label>
+              <Input
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
             </div>
-          </div>
-        </CardContent>
-        <CardFooter className="border-t flex justify-end">
-          <Button>Save Changes</Button>
-        </CardFooter>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Workspace Slug</label>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground font-mono">app.starterkit.com/</span>
+                <Input
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+
+            {isSaved && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold rounded-lg flex items-center gap-2">
+                <Check className="h-4 w-4" /> Settings updated successfully!
+              </div>
+            )}
+          </CardContent>
+          <CardFooter className="border-t flex justify-end">
+            <Button type="submit">Save Changes</Button>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );
