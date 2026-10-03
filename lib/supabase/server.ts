@@ -47,3 +47,5 @@ export function createClient() {
     }
   );
 }
+
+export { createClient as createServerSupabaseClient };

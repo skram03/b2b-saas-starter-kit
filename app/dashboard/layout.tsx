@@ -15,7 +15,11 @@ import {
   Check,
   ChevronDown,
   Sparkles,
-  ShieldAlert,
+  ShieldCheck,
+  ExternalLink,
+  CreditCard,
+  Rocket,
+  X,
 } from "lucide-react";
 
 export default function DashboardLayout({
@@ -26,13 +30,48 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [currentOrg, setCurrentOrg] = useState("Acme Industrial Corp");
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
-  const [notificationsCount, setNotificationsCount] = useState(3);
+  const [isNotifDropdownOpen, setIsNotifDropdownOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(3);
 
-  const orgs = ["Acme Industrial Corp", "Alpha Logistics LLC", "Apex Manufacturing"];
+  const orgs = [
+    "Acme Industrial Corp",
+    "Alpha Logistics LLC",
+    "Apex Manufacturing",
+  ];
+
+  const quickNotifications = [
+    {
+      id: "q-1",
+      title: "RLS Violation Intercepted",
+      time: "Just now",
+      icon: ShieldCheck,
+      color: "text-rose-400",
+    },
+    {
+      id: "q-2",
+      title: "LemonSqueezy Invoice #INV-2026-003",
+      time: "18m ago",
+      icon: CreditCard,
+      color: "text-emerald-400",
+    },
+    {
+      id: "q-3",
+      title: "Vercel Edge v1.4.2 Deployed",
+      time: "1h ago",
+      icon: Rocket,
+      color: "text-blue-400",
+    },
+  ];
 
   const navLinks = [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/data-manager", label: "Data Manager", icon: Layers },
+    {
+      href: "/dashboard/notifications",
+      label: "Notifications",
+      icon: Bell,
+      badge: unreadCount > 0 ? unreadCount : undefined,
+    },
     { href: "/dashboard/team", label: "Team Members", icon: Users },
     { href: "/dashboard/settings", label: "Settings & Billing", icon: Settings },
   ];
@@ -48,7 +87,10 @@ export default function DashboardLayout({
           {/* Organization Switcher with 3D Depth */}
           <div className="relative">
             <button
-              onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
+              onClick={() => {
+                setIsOrgDropdownOpen(!isOrgDropdownOpen);
+                setIsNotifDropdownOpen(false);
+              }}
               className="w-full flex items-center justify-between p-2.5 rounded-xl border border-zinc-700/60 bg-gradient-to-br from-zinc-800/80 to-zinc-900/90 hover:border-zinc-600 text-left transition-all shadow-md group"
             >
               <div className="flex items-center gap-2.5 truncate">
@@ -56,9 +98,12 @@ export default function DashboardLayout({
                   {currentOrg[0]}
                 </div>
                 <div className="truncate">
-                  <p className="text-xs font-bold leading-none truncate text-zinc-100">{currentOrg}</p>
+                  <p className="text-xs font-bold leading-none truncate text-zinc-100">
+                    {currentOrg}
+                  </p>
                   <span className="text-[10px] font-semibold text-emerald-400 flex items-center gap-1 mt-0.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Pro Enterprise
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />{" "}
+                    Pro Enterprise
                   </span>
                 </div>
               </div>
@@ -80,7 +125,9 @@ export default function DashboardLayout({
                     className="w-full flex items-center justify-between px-2.5 py-2 text-xs rounded-lg hover:bg-zinc-800 text-left text-zinc-200 transition-colors"
                   >
                     <span>{org}</span>
-                    {org === currentOrg && <Check className="h-3.5 w-3.5 text-primary" />}
+                    {org === currentOrg && (
+                      <Check className="h-3.5 w-3.5 text-primary" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -104,7 +151,12 @@ export default function DashboardLayout({
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span>{item.label}</span>
-                  {isActive && (
+                  {item.badge !== undefined && (
+                    <span className="ml-auto px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-primary text-white shadow-sm">
+                      {item.badge}
+                    </span>
+                  )}
+                  {isActive && !item.badge && (
                     <span className="ml-auto h-2 w-2 rounded-full bg-white shadow-glow" />
                   )}
                 </Link>
@@ -120,7 +172,9 @@ export default function DashboardLayout({
               <span className="flex items-center gap-1.5">
                 <Sparkles className="h-3 w-3 text-primary" /> RLS Security
               </span>
-              <span className="text-emerald-400 text-[10px] font-mono">ENFORCED</span>
+              <span className="text-emerald-400 text-[10px] font-mono">
+                ENFORCED
+              </span>
             </div>
             <p className="text-[10px] text-zinc-500 leading-tight">
               PostgreSQL multi-tenant policies active.
@@ -147,7 +201,7 @@ export default function DashboardLayout({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-10">
+        <header className="h-16 border-b border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <span className="font-bold text-sm tracking-tight text-zinc-200 capitalize">
               {pathname === "/dashboard"
@@ -157,29 +211,92 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => {
-                alert("🔔 Active Notifications:\n1. Backup completed (Postgres RLS)\n2. Sarah Connor joined the admin team\n3. LemonSqueezy invoice generated");
-                setNotificationsCount(0);
-              }}
-              className="relative p-2 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 text-zinc-400 hover:text-zinc-100 transition-colors shadow-sm"
-              title="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-              {notificationsCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] text-white font-bold flex items-center justify-center shadow-lg shadow-primary/50 animate-pulse">
-                  {notificationsCount}
-                </span>
+            {/* Notifications Bell with 3D Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsNotifDropdownOpen(!isNotifDropdownOpen)}
+                className="relative p-2 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 text-zinc-400 hover:text-zinc-100 transition-colors shadow-sm"
+                title="Notifications"
+              >
+                <Bell className="h-4 w-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] text-white font-bold flex items-center justify-center shadow-lg shadow-primary/50 animate-pulse">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {isNotifDropdownOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-800 bg-zinc-950/95 backdrop-blur-2xl p-4 shadow-2xl space-y-3 z-50 animate-in fade-in zoom-in-95">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-zinc-100">
+                        Recent Alerts
+                      </span>
+                      {unreadCount > 0 && (
+                        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-primary/20 text-primary border border-primary/30">
+                          {unreadCount} new
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => setUnreadCount(0)}
+                      className="text-[11px] text-zinc-400 hover:text-zinc-200 font-semibold transition-colors"
+                    >
+                      Mark read
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {quickNotifications.map((notif) => {
+                      const Icon = notif.icon;
+                      return (
+                        <div
+                          key={notif.id}
+                          className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-zinc-900/80 transition-colors cursor-pointer"
+                          onClick={() => setIsNotifDropdownOpen(false)}
+                        >
+                          <div className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 shrink-0">
+                            <Icon className={`h-3.5 w-3.5 ${notif.color}`} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-zinc-200 truncate">
+                              {notif.title}
+                            </p>
+                            <span className="text-[10px] text-zinc-500 font-mono">
+                              {notif.time}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="pt-2 border-t border-zinc-800 flex justify-between items-center text-xs">
+                    <Link
+                      href="/dashboard/notifications"
+                      onClick={() => setIsNotifDropdownOpen(false)}
+                      className="w-full text-center py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold border border-primary/20 transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <span>Open Notification Center</span>
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                </div>
               )}
-            </button>
+            </div>
 
             <div className="flex items-center gap-3 pl-3 border-l border-zinc-800">
               <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-primary to-indigo-500 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-primary/30">
                 JD
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-bold leading-none text-zinc-200">John Doe</p>
-                <p className="text-[10px] text-zinc-500 mt-0.5">Workspace Owner</p>
+                <p className="text-xs font-bold leading-none text-zinc-200">
+                  John Doe
+                </p>
+                <p className="text-[10px] text-zinc-500 mt-0.5">
+                  Workspace Owner
+                </p>
               </div>
             </div>
           </div>
