@@ -20,6 +20,7 @@ import {
   CreditCard,
   Rocket,
   X,
+  Box,
 } from "lucide-react";
 
 export default function DashboardLayout({
@@ -59,13 +60,13 @@ export default function DashboardLayout({
       title: "Vercel Edge v1.4.2 Deployed",
       time: "1h ago",
       icon: Rocket,
-      color: "text-blue-400",
+      color: "text-cyan-400",
     },
   ];
 
   const navLinks = [
-    { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-    { href: "/dashboard/data-manager", label: "Data Manager", icon: Layers },
+    { href: "/dashboard", label: "Control Center", icon: LayoutDashboard },
+    { href: "/dashboard/data-manager", label: "3D Data Manager", icon: Layers },
     {
       href: "/dashboard/notifications",
       label: "Notifications",
@@ -89,37 +90,40 @@ export default function DashboardLayout({
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col md:flex-row relative selection:bg-primary selection:text-primary-foreground">
-      {/* Background ambient lighting */}
-      <div className="fixed top-0 left-64 w-[600px] h-[400px] bg-primary/10 blur-[150px] pointer-events-none -z-10" />
+    <div className="min-h-screen bg-[#05070a] text-zinc-100 flex flex-col md:flex-row relative selection:bg-cyan-500/30 selection:text-cyan-200">
+      {/* 3D Cybernetic Background Ambient Grid */}
+      <div className="fixed inset-0 isometric-grid-bg opacity-20 pointer-events-none -z-10" />
 
-      {/* 3D Sidebar Console */}
-      <aside className="w-full md:w-64 border-r border-zinc-800/80 bg-zinc-900/60 backdrop-blur-2xl p-4 flex flex-col justify-between shrink-0 z-20">
+      {/* Volumetric Radial Glows */}
+      <div className="fixed top-0 left-64 w-[700px] h-[450px] bg-gradient-to-br from-indigo-600/15 via-cyan-500/10 to-transparent blur-[160px] pointer-events-none -z-10" />
+
+      {/* 3D Elevated Sidebar Console */}
+      <aside className="w-full md:w-68 border-r border-zinc-800/80 bg-zinc-950/80 backdrop-blur-2xl p-4 flex flex-col justify-between shrink-0 z-20 shadow-[10px_0_30px_rgba(0,0,0,0.5)]">
         <div className="space-y-6">
-          {/* Organization Switcher with 3D Depth */}
+          {/* Brand & Organization Switcher with 3D Depth */}
           <div className="relative">
             <button
               onClick={() => {
                 setIsOrgDropdownOpen(!isOrgDropdownOpen);
                 setIsNotifDropdownOpen(false);
               }}
-              className="w-full flex items-center justify-between p-2.5 rounded-xl border border-zinc-700/60 bg-gradient-to-br from-zinc-800/80 to-zinc-900/90 hover:border-zinc-600 text-left transition-all shadow-md group relative z-50"
+              className="w-full flex items-center justify-between p-3 rounded-2xl border border-zinc-700/60 bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 text-left transition-all shadow-[0_4px_20px_rgba(0,0,0,0.5)] group relative z-50 hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.25)]"
             >
-              <div className="flex items-center gap-2.5 truncate">
-                <div className="h-8 w-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-xs shadow-md shadow-primary/30 group-hover:scale-105 transition-transform">
-                  {currentOrg[0]}
+              <div className="flex items-center gap-3 truncate">
+                <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 text-white flex items-center justify-center font-black text-xs shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:scale-105 transition-transform duration-300">
+                  <Box className="h-5 w-5" />
                 </div>
                 <div className="truncate">
-                  <p className="text-xs font-bold leading-none truncate text-zinc-100">
+                  <p className="text-xs font-black tracking-wide truncate text-white">
                     {currentOrg}
                   </p>
-                  <span className="text-[10px] font-semibold text-emerald-400 flex items-center gap-1 mt-0.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />{" "}
-                    Pro Enterprise
+                  <span className="text-[10px] font-bold text-cyan-400 flex items-center gap-1.5 mt-0.5 font-mono">
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />{" "}
+                    Enterprise RLS
                   </span>
                 </div>
               </div>
-              <ChevronDown className="h-4 w-4 text-zinc-400 shrink-0" />
+              <ChevronDown className="h-4 w-4 text-zinc-400 shrink-0 group-hover:text-cyan-400 transition-colors" />
             </button>
 
             {/* Click-outside backdrop for Org Dropdown */}
@@ -129,9 +133,9 @@ export default function DashboardLayout({
                   className="fixed inset-0 z-40"
                   onClick={() => setIsOrgDropdownOpen(false)}
                 />
-                <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-xl p-1.5 shadow-2xl space-y-1 animate-in fade-in">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase px-2 py-1">
-                    Tenant Organizations
+                <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl glass-panel-3d p-2 shadow-2xl space-y-1 animate-in fade-in zoom-in-95">
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 px-3 py-1.5">
+                    Tenant Workspaces
                   </p>
                   {orgs.map((org) => (
                     <button
@@ -140,11 +144,11 @@ export default function DashboardLayout({
                         setCurrentOrg(org);
                         setIsOrgDropdownOpen(false);
                       }}
-                      className="w-full flex items-center justify-between px-2.5 py-2 text-xs rounded-lg hover:bg-zinc-800 text-left text-zinc-200 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold rounded-xl hover:bg-zinc-800 text-left text-zinc-200 transition-colors"
                     >
                       <span>{org}</span>
                       {org === currentOrg && (
-                        <Check className="h-3.5 w-3.5 text-primary" />
+                        <Check className="h-4 w-4 text-cyan-400" />
                       )}
                     </button>
                   ))}
@@ -153,8 +157,8 @@ export default function DashboardLayout({
             )}
           </div>
 
-          {/* Navigation Links with 3D Active Pill */}
-          <nav className="space-y-1.5">
+          {/* Navigation Links with 3D Beveled Pill */}
+          <nav className="space-y-2">
             {navLinks.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -162,21 +166,21 @@ export default function DashboardLayout({
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 ${
                     isActive
-                      ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-lg shadow-primary/30 scale-[1.02]"
-                      : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60"
+                      ? "btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] scale-[1.02]"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-900/80 border border-transparent hover:border-zinc-800"
                   }`}
                 >
                   <Icon className="h-4 w-4 shrink-0" />
                   <span>{item.label}</span>
                   {item.badge !== undefined && (
-                    <span className="ml-auto px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-primary text-white shadow-sm">
+                    <span className="ml-auto px-2 py-0.5 rounded-full text-[10px] font-black bg-cyan-400 text-zinc-950 shadow-md">
                       {item.badge}
                     </span>
                   )}
                   {isActive && !item.badge && (
-                    <span className="ml-auto h-2 w-2 rounded-full bg-white shadow-glow" />
+                    <span className="ml-auto h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
                   )}
                 </Link>
               );
@@ -184,33 +188,33 @@ export default function DashboardLayout({
           </nav>
         </div>
 
-        {/* Console Status & Utilities */}
+        {/* 3D Console Diagnostics */}
         <div className="pt-6 border-t border-zinc-800/80 space-y-3">
-          <div className="p-3 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-1.5 shadow-inner">
-            <div className="flex items-center justify-between text-[11px] font-bold text-zinc-300">
-              <span className="flex items-center gap-1.5">
-                <Sparkles className="h-3 w-3 text-primary" /> RLS Security
+          <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800/90 space-y-1.5 shadow-inner">
+            <div className="flex items-center justify-between text-[11px] font-bold text-zinc-200">
+              <span className="flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-cyan-400" /> RLS Kernel
               </span>
-              <span className="text-emerald-400 text-[10px] font-mono">
-                ENFORCED
+              <span className="text-emerald-400 text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-800/70">
+                ACTIVE
               </span>
             </div>
-            <p className="text-[10px] text-zinc-500 leading-tight">
-              PostgreSQL multi-tenant policies active.
+            <p className="text-[10px] text-zinc-500 font-mono leading-tight">
+              PostgreSQL multi-tenant security partition verified.
             </p>
           </div>
 
           <Link
             href="/"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
           >
-            <Globe className="h-4 w-4" />
+            <Globe className="h-4 w-4 text-cyan-400" />
             <span>Public Home</span>
           </Link>
 
           <Link
             href="/login"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-950/50 hover:text-rose-300 transition-colors"
           >
             <LogOut className="h-4 w-4" />
             <span>Sign Out</span>
@@ -220,9 +224,10 @@ export default function DashboardLayout({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b border-zinc-800/80 bg-zinc-900/40 backdrop-blur-xl px-6 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-18 border-b border-zinc-800/80 bg-zinc-950/70 backdrop-blur-2xl px-6 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <span className="font-bold text-sm tracking-tight text-zinc-200 capitalize">
+            <span className="font-black text-sm tracking-wide text-white uppercase font-mono flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
               {pathname === "/dashboard"
                 ? "Executive Control Center"
                 : pathname.replace("/dashboard/", "").replace("-", " ")}
@@ -230,19 +235,19 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-4">
-            {/* Notifications Bell with 3D Dropdown */}
+            {/* 3D Notifications Bell */}
             <div className="relative">
               <button
                 onClick={() => {
                   setIsNotifDropdownOpen(!isNotifDropdownOpen);
                   setIsOrgDropdownOpen(false);
                 }}
-                className="relative p-2 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-zinc-700 text-zinc-400 hover:text-zinc-100 transition-colors shadow-sm relative z-50"
+                className="relative p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 hover:border-cyan-500/50 text-zinc-400 hover:text-white transition-all shadow-md relative z-50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)]"
                 title="Notifications"
               >
                 <Bell className="h-4 w-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] text-white font-bold flex items-center justify-center shadow-lg shadow-primary/50 animate-pulse">
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-cyan-400 text-[10px] text-zinc-950 font-black flex items-center justify-center shadow-[0_0_10px_rgba(6,182,212,0.8)] animate-pulse">
                     {unreadCount}
                   </span>
                 )}
@@ -255,23 +260,23 @@ export default function DashboardLayout({
                     className="fixed inset-0 z-40"
                     onClick={() => setIsNotifDropdownOpen(false)}
                   />
-                  <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl border border-zinc-800 bg-zinc-950/95 backdrop-blur-2xl p-4 shadow-2xl space-y-3 z-50 animate-in fade-in zoom-in-95">
-                    <div className="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                  <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-2xl glass-panel-3d p-4 shadow-2xl space-y-3 z-50 animate-in fade-in zoom-in-95">
+                    <div className="flex items-center justify-between border-b border-zinc-800/80 pb-2.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-zinc-100">
-                          Recent Alerts
+                        <span className="text-xs font-bold text-white">
+                          Recent System Alerts
                         </span>
                         {unreadCount > 0 && (
-                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-primary/20 text-primary border border-primary/30">
-                            {unreadCount} new
+                          <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 font-mono">
+                            {unreadCount} unread
                           </span>
                         )}
                       </div>
                       <button
                         onClick={() => setUnreadCount(0)}
-                        className="text-[11px] text-zinc-400 hover:text-zinc-200 font-semibold transition-colors"
+                        className="text-[11px] text-zinc-400 hover:text-cyan-400 font-bold transition-colors font-mono"
                       >
-                        Mark read
+                        Mark all read
                       </button>
                     </div>
 
@@ -281,14 +286,14 @@ export default function DashboardLayout({
                         return (
                           <div
                             key={notif.id}
-                            className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-zinc-900/80 transition-colors cursor-pointer"
+                            className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors cursor-pointer border border-transparent hover:border-zinc-700/60"
                             onClick={() => setIsNotifDropdownOpen(false)}
                           >
-                            <div className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 shrink-0">
-                              <Icon className={`h-3.5 w-3.5 ${notif.color}`} />
+                            <div className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 shrink-0 shadow-inner">
+                              <Icon className={`h-4 w-4 ${notif.color}`} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs font-semibold text-zinc-200 truncate">
+                              <p className="text-xs font-bold text-zinc-200 truncate">
                                 {notif.title}
                               </p>
                               <span className="text-[10px] text-zinc-500 font-mono">
@@ -300,11 +305,11 @@ export default function DashboardLayout({
                       })}
                     </div>
 
-                    <div className="pt-2 border-t border-zinc-800 flex justify-between items-center text-xs">
+                    <div className="pt-2 border-t border-zinc-800/80">
                       <Link
                         href="/dashboard/notifications"
                         onClick={() => setIsNotifDropdownOpen(false)}
-                        className="w-full text-center py-2 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold border border-primary/20 transition-all flex items-center justify-center gap-1.5"
+                        className="w-full text-center py-2.5 rounded-xl btn-3d bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 font-bold border border-cyan-500/30 transition-all flex items-center justify-center gap-2 text-xs shadow-sm"
                       >
                         <span>Open Notification Center</span>
                         <ExternalLink className="h-3.5 w-3.5" />
@@ -315,16 +320,17 @@ export default function DashboardLayout({
               )}
             </div>
 
+            {/* User Profile Capsule */}
             <div className="flex items-center gap-3 pl-3 border-l border-zinc-800">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-primary to-indigo-500 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-primary/30">
-                JD
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 text-white font-black flex items-center justify-center text-xs shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+                SK
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-xs font-bold leading-none text-zinc-200">
-                  John Doe
+                <p className="text-xs font-bold leading-none text-white">
+                  skram03
                 </p>
-                <p className="text-[10px] text-zinc-500 mt-0.5">
-                  Workspace Owner
+                <p className="text-[10px] text-cyan-400 font-mono mt-0.5">
+                  Super Admin
                 </p>
               </div>
             </div>

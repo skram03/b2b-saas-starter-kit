@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { Card3D } from "@/components/shared/card-3d";
 
 interface ItemRecord {
   id: string;
@@ -386,43 +387,42 @@ export default function DataManagerPage() {
       {viewMode === "table" ? (
         <DataTable columns={columns} data={filteredData} />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 [perspective:1000px]">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredData.map((item) => (
-            <div
+            <Card3D
               key={item.id}
-              className="relative group rounded-2xl border border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:[transform:translateY(-6px)] hover:border-zinc-700 hover:shadow-[0_20px_40px_-15px_rgba(59,130,246,0.25)] flex flex-col justify-between"
+              intensity={12}
+              className="p-6 glass-panel-3d flex flex-col justify-between"
             >
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
+                <div className="flex items-center justify-between" style={{ transform: "translateZ(30px)" }}>
+                  <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60 shadow-sm">
                     {item.id}
                   </span>
                   <StatusBadge status={item.status} />
                 </div>
 
-                <div>
-                  <h3 className="font-bold text-base text-zinc-100 mt-1">{item.title}</h3>
-                  <span className="text-xs text-zinc-400 font-medium">{item.category}</span>
+                <div style={{ transform: "translateZ(25px)" }}>
+                  <h3 className="font-black text-base text-white mt-1 drop-shadow-sm">{item.title}</h3>
+                  <span className="text-xs text-zinc-400 font-medium font-mono">{item.category}</span>
                 </div>
 
-                <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
-                  <span className="text-zinc-500">Valuation:</span>
-                  <span className="font-mono text-base font-bold text-zinc-100">
+                <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs" style={{ transform: "translateZ(20px)" }}>
+                  <span className="text-zinc-500 font-mono">Valuation:</span>
+                  <span className="font-mono text-base font-black text-emerald-400">
                     {formatCurrency(item.amount)}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-5 pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+              <div className="mt-5 pt-3 border-t border-zinc-800/80 flex items-center justify-between" style={{ transform: "translateZ(25px)" }}>
                 <span className="text-[11px] text-zinc-500 font-mono">{item.createdAt}</span>
                 <div className="flex gap-2">
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => setEditingRecord(item)}
-                    className="h-8 text-xs text-zinc-300 hover:bg-zinc-800"
+                    className="h-8 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800/80 font-bold"
                   >
                     Edit
                   </Button>
@@ -434,13 +434,13 @@ export default function DataManagerPage() {
                         setData(data.filter((d) => d.id !== item.id));
                       }
                     }}
-                    className="h-8 text-xs text-rose-400 hover:bg-rose-950/40 hover:text-rose-300"
+                    className="h-8 text-xs text-rose-400 hover:bg-rose-950/50 hover:text-rose-300 font-bold"
                   >
                     Delete
                   </Button>
                 </div>
               </div>
-            </div>
+            </Card3D>
           ))}
 
           {filteredData.length === 0 && (

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, ShieldCheck, Mail, X, Users, KeyRound, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Card3D } from "@/components/shared/card-3d";
 
 export default function TeamPage() {
   const [members, setMembers] = useState([
@@ -51,36 +52,33 @@ export default function TeamPage() {
       {/* 3D Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-mono font-bold mb-2 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
             <Users className="h-3.5 w-3.5" /> Granular Access Control
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-zinc-50">Team &amp; Access Controls</h1>
-          <p className="text-sm text-zinc-400 mt-1">
+          <h1 className="text-3xl font-black tracking-tight text-white">Team &amp; Access Controls</h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal">
             Manage organization members, assign role-based permissions, and invite collaborators.
           </p>
         </div>
 
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="bg-gradient-to-r from-primary to-indigo-600 font-bold shadow-lg shadow-primary/25 gap-2"
+          className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 font-bold text-xs shadow-[0_0_20px_rgba(6,182,212,0.35)] gap-2"
         >
           <UserPlus className="h-4 w-4" /> Invite Member
         </Button>
       </div>
 
       {/* 3D Roster Card Container */}
-      <div className="relative rounded-2xl border border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 p-6 backdrop-blur-xl shadow-2xl overflow-hidden space-y-4">
-        {/* Specular line */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+      <Card3D intensity={10} className="p-6 glass-panel-3d overflow-hidden space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-zinc-800/80">
           <div>
-            <h3 className="font-bold text-base text-zinc-100">Organization Roster</h3>
-            <p className="text-xs text-zinc-500">
+            <h3 className="font-bold text-base text-white">Organization Roster</h3>
+            <p className="text-xs text-zinc-400 font-mono">
               Users authenticated via Supabase Row-Level Security memberships.
             </p>
           </div>
-          <span className="text-xs font-mono text-primary font-bold bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+          <span className="text-xs font-mono text-cyan-400 font-bold bg-cyan-950/80 px-3 py-1 rounded-full border border-cyan-800/60 shadow-sm">
             {members.length} Active Seats
           </span>
         </div>
@@ -142,7 +140,7 @@ export default function TeamPage() {
             </div>
           ))}
         </div>
-      </div>
+      </Card3D>
 
       {/* 3D Invite Modal */}
       {isModalOpen && (

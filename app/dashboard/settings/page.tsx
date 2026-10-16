@@ -24,6 +24,7 @@ import {
   Lock,
 } from "lucide-react";
 import { updatePlanAction, cancelSubscriptionAction } from "@/app/actions/billing";
+import { Card3D } from "@/components/shared/card-3d";
 
 interface Invoice {
   id: string;
@@ -155,77 +156,78 @@ export default function SettingsPage() {
       </div>
 
       {/* 3D Black Titanium Membership Card */}
-      <div className="relative group [perspective:1000px]">
-        <div className="relative rounded-3xl border border-zinc-700/80 bg-gradient-to-tr from-zinc-950 via-zinc-900 to-zinc-800 p-8 shadow-2xl backdrop-blur-xl overflow-hidden transition-transform duration-500 hover:[transform:rotateX(2deg)_rotateY(-2deg)]">
-          {/* Holographic Sheen */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary/25 via-indigo-500/10 to-transparent blur-3xl pointer-events-none" />
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
-
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 relative z-10">
-            <div>
-              <span className="text-[11px] font-mono tracking-widest text-zinc-400 uppercase font-semibold">
-                CURRENT SUBSCRIPTION TIER
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-50 mt-1 capitalize">
-                {currentPlan === "starter"
-                  ? "Starter Team Tier"
-                  : currentPlan === "pro"
-                  ? "Pro Enterprise Tier"
-                  : "Scale Global Tier"}
-              </h2>
-              <div className="flex items-baseline gap-2 mt-3">
-                <span className="text-4xl font-extrabold text-zinc-100">
-                  {currentPlan === "starter" ? "$29" : currentPlan === "pro" ? "$149" : "$399"}
-                </span>
-                <span className="text-xs text-zinc-400 font-medium">
-                  / month billed via LemonSqueezy / Stripe
-                </span>
-              </div>
-            </div>
-
-            <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold self-start border ${
-                isCanceled
-                  ? "bg-rose-500/20 text-rose-400 border-rose-500/30"
-                  : "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-              }`}
-            >
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  isCanceled ? "bg-rose-400" : "bg-emerald-400 animate-pulse"
-                }`}
-              />
-              {isCanceled ? "Canceling at period end" : "Active Subscription"}
+      <Card3D intensity={14} className="p-8 holographic-titanium border border-zinc-700/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)]">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 relative z-10">
+          <div style={{ transform: "translateZ(30px)" }}>
+            <span className="text-[11px] font-mono tracking-widest text-cyan-400 uppercase font-black">
+              CURRENT SUBSCRIPTION TIER
             </span>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1 capitalize drop-shadow-md">
+              {currentPlan === "starter"
+                ? "Starter Team Tier"
+                : currentPlan === "pro"
+                ? "Pro Enterprise Tier"
+                : "Scale Global Tier"}
+            </h2>
+            <div className="flex items-baseline gap-2 mt-3">
+              <span className="text-4xl font-black text-white">
+                {currentPlan === "starter" ? "$29" : currentPlan === "pro" ? "$149" : "$399"}
+              </span>
+              <span className="text-xs text-zinc-400 font-medium font-mono">
+                / month billed via LemonSqueezy / Stripe
+              </span>
+            </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-zinc-800/80 grid sm:grid-cols-3 gap-4 text-xs text-zinc-300">
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-emerald-400 shrink-0" />
-              {currentPlan === "starter" ? "5 Team Seats" : "Unlimited Team Seats"}
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Postgres RLS Isolation
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-emerald-400 shrink-0" /> Dedicated Webhook Dispatcher
-            </div>
-          </div>
+          <span
+            style={{ transform: "translateZ(35px)" }}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold self-start border shadow-md ${
+              isCanceled
+                ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                : "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+            }`}
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${
+                isCanceled ? "bg-rose-400" : "bg-emerald-400 animate-pulse"
+              }`}
+            />
+            {isCanceled ? "Canceling at period end" : "Active RLS Subscription"}
+          </span>
+        </div>
 
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-zinc-800/80 text-xs text-zinc-400">
-            <p>Next billing renewal: November 1, 2026</p>
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                onClick={() => setIsManageModalOpen(true)}
-                className="bg-primary hover:bg-blue-600 text-white gap-2 font-bold shadow-lg shadow-primary/30"
-              >
-                <CreditCard className="h-4 w-4" /> Manage Subscription
-              </Button>
-            </div>
+        <div
+          style={{ transform: "translateZ(25px)" }}
+          className="mt-8 pt-6 border-t border-zinc-800/80 grid sm:grid-cols-3 gap-4 text-xs text-zinc-200"
+        >
+          <div className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-cyan-400 shrink-0" />
+            {currentPlan === "starter" ? "5 Team Seats" : "Unlimited Team Seats"}
+          </div>
+          <div className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-cyan-400 shrink-0" /> Postgres RLS Data Isolation
+          </div>
+          <div className="flex items-center gap-2">
+            <Check className="h-4 w-4 text-cyan-400 shrink-0" /> Dedicated Webhook Dispatcher
           </div>
         </div>
-      </div>
+
+        <div
+          style={{ transform: "translateZ(25px)" }}
+          className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-zinc-800/80 text-xs text-zinc-400"
+        >
+          <p className="font-mono">Next billing renewal: November 1, 2026</p>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              onClick={() => setIsManageModalOpen(true)}
+              className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:opacity-95 text-white gap-2 font-black shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+            >
+              <CreditCard className="h-4 w-4" /> Manage Subscription
+            </Button>
+          </div>
+        </div>
+      </Card3D>
 
       {/* 3D General Workspace Configuration */}
       <div className="relative rounded-2xl border border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 p-6 backdrop-blur-xl shadow-2xl space-y-6">

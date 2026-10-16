@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { StatCard } from "@/components/shared/stat-card";
+import { Card3D } from "@/components/shared/card-3d";
 import {
   Users,
   DollarSign,
@@ -13,8 +14,10 @@ import {
   Sparkles,
   Server,
   Zap,
+  ShieldCheck,
+  Clock,
+  Radio,
 } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -35,7 +38,7 @@ export default function DashboardOverviewPage() {
         .join("\n");
     const link = document.createElement("a");
     link.href = encodeURI(csvContent);
-    link.download = `executive_kpi_report_${Date.now()}.csv`;
+    link.download = `nexus_telemetry_report_${Date.now()}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -43,7 +46,7 @@ export default function DashboardOverviewPage() {
 
   const handleInjectEvent = () => {
     const events = [
-      { action: "API token generated", entity: "Production Read/Write Key", user: "John Doe", status: "active" },
+      { action: "API token generated", entity: "Production Read/Write Key", user: "skram03", status: "active" },
       { action: "New customer invoice billed", entity: "Invoice #INV-2026-099 ($2,800)", user: "Stripe Engine", status: "completed" },
       { action: "Database sync check passed", entity: "All 3 regions healthy", user: "Postgres Cluster", status: "completed" },
     ];
@@ -61,15 +64,18 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Page Header with 3D Action Buttons */}
+      {/* 3D Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-2">
-            <Zap className="h-3.5 w-3.5" /> 3D Realtime Analytics
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-mono font-bold mb-2 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+            <Radio className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+            <span>3D Realtime Telemetry Grid</span>
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-zinc-50">Control Center</h1>
-          <p className="text-sm text-zinc-400 mt-1">
-            Real-time multi-tenant telemetry, billing throughput, and system health.
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+            Command Center
+          </h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal">
+            Multi-tenant data isolation, billing throughput, and PostgreSQL kernel telemetry.
           </p>
         </div>
 
@@ -78,35 +84,35 @@ export default function DashboardOverviewPage() {
             variant="outline"
             size="sm"
             onClick={handleDownloadReport}
-            className="border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 gap-1.5 shadow-md"
+            className="btn-3d border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 gap-2 text-xs font-bold shadow-md"
           >
-            <Download className="h-4 w-4" /> Export CSV
+            <Download className="h-4 w-4 text-cyan-400" /> Export CSV
           </Button>
 
           <Button
             size="sm"
             onClick={handleInjectEvent}
-            className="bg-gradient-to-r from-primary to-indigo-600 font-bold shadow-lg shadow-primary/25 gap-1.5"
+            className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white font-bold text-xs gap-2 shadow-[0_0_20px_rgba(6,182,212,0.4)]"
           >
-            <Sparkles className="h-4 w-4" /> Test Live Event
+            <Sparkles className="h-4 w-4" /> Inject Live Event
           </Button>
 
-          <Button size="sm" variant="secondary" asChild className="border-zinc-700 bg-zinc-800 text-zinc-200">
+          <Button size="sm" asChild className="btn-3d bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 text-xs font-bold">
             <Link href="/dashboard/data-manager">
-              <Plus className="h-4 w-4" /> Add Record
+              <Plus className="h-4 w-4 text-cyan-400" /> Add Record
             </Link>
           </Button>
         </div>
       </div>
 
-      {/* 3D KPI Cards Grid */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 3D KPI Cards with Interactive Cursor Tilt */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           title="Monthly Recurring Revenue"
           value="$48,290.00"
           change="+14.2%"
           trend="up"
-          description="vs last 30 days"
+          description="vs last 30 days billing"
           icon={DollarSign}
         />
         <StatCard
@@ -114,45 +120,44 @@ export default function DashboardOverviewPage() {
           value="128"
           change="+8"
           trend="up"
-          description="verified enterprise accounts"
+          description="RLS isolated databases"
           icon={Users}
         />
         <StatCard
-          title="DB Query Efficiency"
+          title="Query Cache Hit Rate"
           value="99.8%"
           change="+0.4%"
           trend="up"
-          description="RLS partition index hits"
+          description="Postgres partition index"
           icon={Activity}
         />
         <StatCard
-          title="Pending Queue Jobs"
+          title="Async Worker Queue"
           value="14"
           change="-6"
           trend="down"
-          description="scheduled cron triggers"
+          description="background cron jobs"
           icon={PackageCheck}
         />
       </div>
 
-      {/* 3D Interactive Live Feed Showcase */}
-      <div className="relative rounded-2xl border border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 via-zinc-900/70 to-zinc-950 p-6 backdrop-blur-xl shadow-2xl overflow-hidden">
-        {/* Top Specular Line */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
+      {/* 3D Interactive Telemetry Stream */}
+      <Card3D intensity={8} className="p-6 glass-panel-3d relative">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/80">
-          <div className="flex items-center gap-2.5">
-            <div className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse shadow-glow" />
-            <h3 className="font-bold text-base text-zinc-100">Live PostgreSQL Stream</h3>
-            <span className="text-[11px] font-mono text-zinc-500 bg-zinc-800/60 px-2 py-0.5 rounded border border-zinc-700/50">
+          <div className="flex items-center gap-3">
+            <div className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+            <h3 className="font-black text-base text-white tracking-wide">
+              Live PostgreSQL Kernel Events
+            </h3>
+            <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-full border border-cyan-800/60">
               realtime-channel-01
             </span>
           </div>
           <Link
             href="/dashboard/data-manager"
-            className="text-xs text-primary hover:underline flex items-center gap-1 font-semibold"
+            className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 font-bold transition-colors"
           >
-            Open Data Manager Workbench <ArrowUpRight className="h-3.5 w-3.5" />
+            Open Data Workbench <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
 
@@ -160,23 +165,29 @@ export default function DashboardOverviewPage() {
           {activities.map((act) => (
             <div
               key={act.id}
-              className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-zinc-800/30 px-3 rounded-xl transition-colors"
+              className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-zinc-800/40 px-3 rounded-xl transition-all duration-200"
             >
-              <div className="space-y-0.5">
-                <p className="font-semibold text-sm text-zinc-100">{act.action}</p>
-                <p className="text-xs text-zinc-400">
-                  <span className="font-mono text-primary">{act.entity}</span> &bull; By{" "}
-                  <span className="font-medium text-zinc-300">{act.user}</span>
+              <div className="space-y-1">
+                <p className="font-bold text-sm text-zinc-100 flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                  {act.action}
+                </p>
+                <p className="text-xs text-zinc-400 font-mono">
+                  <span className="text-cyan-400 font-bold">{act.entity}</span> &bull; Triggered by{" "}
+                  <span className="text-zinc-300 font-semibold">{act.user}</span>
                 </p>
               </div>
               <div className="flex items-center gap-4 self-end sm:self-center">
                 <StatusBadge status={act.status} />
-                <span className="text-xs text-zinc-500 font-mono">{act.time}</span>
+                <span className="text-xs text-zinc-500 font-mono flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {act.time}
+                </span>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </Card3D>
     </div>
   );
 }
