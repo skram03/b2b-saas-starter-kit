@@ -21,6 +21,7 @@ import {
   Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card3D } from "@/components/shared/card-3d";
 
 interface NotificationItem {
   id: string;
@@ -227,20 +228,20 @@ export default function NotificationsPage() {
     switch (priority) {
       case "p0":
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-950/70 border border-rose-800 text-rose-300 flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-400 animate-ping" />
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-950/70 border border-rose-800 text-rose-300 flex items-center gap-1.5 font-mono">
+            <span className="h-2 w-2 rounded-full bg-rose-400 animate-ping" />
             CRITICAL P0
           </span>
         );
       case "p1":
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-950/70 border border-amber-800 text-amber-300">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-950/70 border border-amber-800 text-amber-300 font-mono">
             HIGH P1
           </span>
         );
       case "p2":
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-zinc-800 border border-zinc-700 text-zinc-400">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 border border-slate-700 text-slate-300 font-mono">
             INFO P2
           </span>
         );
@@ -251,8 +252,8 @@ export default function NotificationsPage() {
     <div className="space-y-8 max-w-5xl mx-auto">
       {/* Toast Notification */}
       {bannerToast && (
-        <div className="fixed top-20 right-6 z-50 p-4 rounded-xl border border-primary/30 bg-zinc-900/95 backdrop-blur-xl text-zinc-100 text-xs font-semibold shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
-          <Sparkles className="h-4 w-4 text-primary" />
+        <div className="fixed top-20 right-6 z-50 p-4 rounded-2xl border border-cyan-500/40 glass-panel-3d text-white text-xs font-semibold shadow-[0_20px_50px_rgba(2,6,23,0.8)] flex items-center gap-3 animate-in fade-in slide-in-from-top-4 font-mono">
+          <Sparkles className="h-4 w-4 text-cyan-400" />
           <span>{bannerToast}</span>
         </div>
       )}
@@ -260,13 +261,13 @@ export default function NotificationsPage() {
       {/* 3D Header & Control Toolbar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-2">
-            <Bell className="h-3.5 w-3.5" /> Realtime Event Hub
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-mono font-bold mb-2 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+            <Bell className="h-3.5 w-3.5" /> Realtime Event Stream Hub
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-zinc-50">
-            Developer Notification Center
+          <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">
+            Notification Center
           </h1>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-slate-400 mt-1">
             Audit logs, billing events, security triggers, and multi-tenant webhook streams.
           </p>
         </div>
@@ -275,7 +276,7 @@ export default function NotificationsPage() {
           <Button
             size="sm"
             onClick={handleSimulateAlert}
-            className="bg-primary hover:bg-blue-600 text-white font-bold text-xs shadow-lg shadow-primary/30 gap-1.5"
+            className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white font-bold text-xs shadow-[0_0_20px_rgba(6,182,212,0.35)] gap-1.5"
           >
             <Sparkles className="h-3.5 w-3.5" />
             Simulate Alert
@@ -286,9 +287,9 @@ export default function NotificationsPage() {
             size="sm"
             onClick={handleMarkAllRead}
             disabled={unreadCount === 0}
-            className="border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800 text-zinc-300 text-xs gap-1.5"
+            className="border-slate-700/80 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs gap-1.5 font-mono"
           >
-            <CheckCheck className="h-3.5 w-3.5" />
+            <CheckCheck className="h-3.5 w-3.5 text-cyan-400" />
             Mark all read
           </Button>
 
@@ -297,7 +298,7 @@ export default function NotificationsPage() {
             size="sm"
             onClick={handleClearAll}
             disabled={notifications.length === 0}
-            className="border-zinc-800 bg-zinc-900/80 hover:bg-rose-950/40 hover:text-rose-300 text-zinc-400 text-xs gap-1.5"
+            className="border-slate-700/80 bg-slate-800/80 hover:bg-rose-950/50 hover:text-rose-300 text-slate-400 text-xs gap-1.5 font-mono"
           >
             <Trash2 className="h-3.5 w-3.5" />
             Clear
@@ -307,51 +308,51 @@ export default function NotificationsPage() {
 
       {/* 4 Stat Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-900/70 backdrop-blur-xl shadow-lg">
-          <div className="flex items-center justify-between text-zinc-400 text-xs">
-            <span>Total Logged</span>
-            <Bell className="h-4 w-4 text-primary" />
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="flex items-center justify-between text-slate-300 text-xs" style={{ transform: "translateZ(15px)" }}>
+            <span className="font-mono uppercase font-bold text-xs">Total Logged</span>
+            <Bell className="h-4 w-4 text-cyan-400" />
           </div>
-          <div className="text-2xl font-black text-zinc-100 mt-2">
+          <div className="text-3xl font-black text-white mt-2 font-mono" style={{ transform: "translateZ(25px)" }}>
             {notifications.length}
           </div>
-          <span className="text-[10px] text-zinc-500 font-medium">Recorded events</span>
-        </div>
+          <span className="text-xs text-slate-300 font-mono mt-1 inline-block" style={{ transform: "translateZ(10px)" }}>Recorded events</span>
+        </Card3D>
 
-        <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-900/70 backdrop-blur-xl shadow-lg">
-          <div className="flex items-center justify-between text-zinc-400 text-xs">
-            <span>Unread Attention</span>
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="flex items-center justify-between text-slate-300 text-xs" style={{ transform: "translateZ(15px)" }}>
+            <span className="font-mono uppercase font-bold text-xs">Unread Attention</span>
             <AlertCircle className="h-4 w-4 text-amber-400" />
           </div>
-          <div className="text-2xl font-black text-amber-400 mt-2">
+          <div className="text-3xl font-black text-amber-400 mt-2 font-mono" style={{ transform: "translateZ(25px)" }}>
             {unreadCount}
           </div>
-          <span className="text-[10px] text-amber-400/80 font-medium">Pending review</span>
-        </div>
+          <span className="text-xs text-amber-300/90 font-mono mt-1 inline-block" style={{ transform: "translateZ(10px)" }}>Pending review</span>
+        </Card3D>
 
-        <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-900/70 backdrop-blur-xl shadow-lg">
-          <div className="flex items-center justify-between text-zinc-400 text-xs">
-            <span>P0 Security Alerts</span>
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="flex items-center justify-between text-slate-300 text-xs" style={{ transform: "translateZ(15px)" }}>
+            <span className="font-mono uppercase font-bold text-xs">P0 Security</span>
             <ShieldAlert className="h-4 w-4 text-rose-400" />
           </div>
-          <div className="text-2xl font-black text-rose-400 mt-2">
+          <div className="text-3xl font-black text-rose-400 mt-2 font-mono" style={{ transform: "translateZ(25px)" }}>
             {notifications.filter((n) => n.priority === "p0").length}
           </div>
-          <span className="text-[10px] text-zinc-500 font-medium">Zero breaches</span>
-        </div>
+          <span className="text-xs text-slate-300 font-mono mt-1 inline-block" style={{ transform: "translateZ(10px)" }}>Zero breaches</span>
+        </Card3D>
 
-        <div className="p-4 rounded-2xl border border-zinc-800/90 bg-zinc-900/70 backdrop-blur-xl shadow-lg">
-          <div className="flex items-center justify-between text-zinc-400 text-xs">
-            <span>Stream Health</span>
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="flex items-center justify-between text-slate-300 text-xs" style={{ transform: "translateZ(15px)" }}>
+            <span className="font-mono uppercase font-bold text-xs">Stream Health</span>
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
-          <div className="text-2xl font-black text-emerald-400 mt-2">99.98%</div>
-          <span className="text-[10px] text-emerald-400/80 font-medium">Live sync active</span>
-        </div>
+          <div className="text-3xl font-black text-emerald-400 mt-2 font-mono" style={{ transform: "translateZ(25px)" }}>99.98%</div>
+          <span className="text-xs text-emerald-300/90 font-mono mt-1 inline-block" style={{ transform: "translateZ(10px)" }}>Live sync active</span>
+        </Card3D>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-zinc-800">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-slate-700/80">
         {[
           { key: "all", label: "All Events", count: notifications.length },
           { key: "unread", label: "Unread", count: unreadCount },
@@ -381,16 +382,16 @@ export default function NotificationsPage() {
             onClick={() => setActiveTab(tab.key as any)}
             className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === tab.key
-                ? "bg-primary text-white shadow-lg shadow-primary/30"
-                : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900"
+                ? "bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/60"
             }`}
           >
             <span>{tab.label}</span>
             <span
-              className={`px-1.5 py-0.2 rounded-md text-[10px] font-mono ${
+              className={`px-2 py-0.5 rounded-md text-xs font-mono font-bold ${
                 activeTab === tab.key
-                  ? "bg-white/20 text-white"
-                  : "bg-zinc-800 text-zinc-400"
+                  ? "bg-white/25 text-white"
+                  : "bg-slate-800 text-slate-300"
               }`}
             >
               {tab.count}
@@ -402,10 +403,10 @@ export default function NotificationsPage() {
       {/* Notification Stream Feed */}
       <div className="space-y-3">
         {filteredNotifications.length === 0 ? (
-          <div className="p-12 text-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-950/60">
-            <CheckCheck className="h-10 w-10 text-zinc-600 mx-auto mb-3" />
-            <h3 className="text-sm font-bold text-zinc-300">All caught up!</h3>
-            <p className="text-xs text-zinc-500 mt-1">
+          <div className="p-12 text-center rounded-2xl border border-dashed border-slate-700/80 glass-panel-3d">
+            <CheckCheck className="h-10 w-10 text-cyan-400/60 mx-auto mb-3" />
+            <h3 className="text-base font-bold text-white">All caught up!</h3>
+            <p className="text-sm text-slate-300 mt-1">
               No notifications found matching the active filter.
             </p>
           </div>
@@ -415,31 +416,31 @@ export default function NotificationsPage() {
               key={item.id}
               className={`group relative rounded-2xl border p-5 transition-all backdrop-blur-xl ${
                 item.isRead
-                  ? "border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/60"
-                  : "border-primary/40 bg-gradient-to-r from-primary/10 via-zinc-900/80 to-zinc-950 shadow-lg shadow-primary/5"
+                  ? "border-slate-800/80 bg-slate-900/40 hover:bg-slate-900/70"
+                  : "border-cyan-500/40 bg-gradient-to-r from-cyan-950/20 via-slate-900/80 to-slate-950 shadow-[0_4px_25px_rgba(6,182,212,0.1)]"
               }`}
             >
               {/* Unread Glow Dot */}
               {!item.isRead && (
-                <div className="absolute top-5 left-2 h-2 w-2 rounded-full bg-primary shadow-glow animate-pulse" />
+                <div className="absolute top-5 left-2 h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_12px_#22d3ee] animate-pulse" />
               )}
 
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pl-3">
                 <div className="space-y-2 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <div className="p-1.5 rounded-lg bg-zinc-800/80 border border-zinc-700/60 shrink-0">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <div className="p-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 shrink-0">
                       {getCategoryIcon(item.category)}
                     </div>
-                    <span className="text-xs font-bold text-zinc-100">
+                    <span className="text-sm font-bold text-white">
                       {item.title}
                     </span>
                     {getPriorityBadge(item.priority)}
-                    <span className="text-[10px] text-zinc-500 flex items-center gap-1 font-mono">
-                      <Clock className="h-3 w-3" /> {item.timestamp}
+                    <span className="text-xs text-slate-400 flex items-center gap-1.5 font-mono font-medium">
+                      <Clock className="h-3.5 w-3.5 text-cyan-400" /> {item.timestamp}
                     </span>
                   </div>
 
-                  <p className="text-xs text-zinc-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed font-normal">
                     {item.message}
                   </p>
 
@@ -447,7 +448,7 @@ export default function NotificationsPage() {
                     <div className="pt-1">
                       <button
                         onClick={() => setSelectedNotification(item)}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-blue-400 transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors font-mono"
                       >
                         <span>{item.actionLabel}</span>
                         <ExternalLink className="h-3.5 w-3.5" />
@@ -460,14 +461,14 @@ export default function NotificationsPage() {
                 <div className="flex items-center gap-1 shrink-0 self-end sm:self-start opacity-80 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleToggleRead(item.id)}
-                    className="p-1.5 rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-700/80 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
                     title={item.isRead ? "Mark as unread" : "Mark as read"}
                   >
                     <Check className={`h-3.5 w-3.5 ${item.isRead ? "text-emerald-400" : ""}`} />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="p-1.5 rounded-lg border border-zinc-800 bg-zinc-900 hover:bg-rose-950/60 hover:text-rose-300 text-zinc-400 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-700/80 bg-slate-800 hover:bg-rose-950/60 hover:text-rose-300 text-slate-400 transition-colors"
                     title="Delete notification"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -480,23 +481,23 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification Preferences Drawer Card */}
-      <div className="rounded-2xl border border-zinc-800/90 bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 p-6 backdrop-blur-xl shadow-xl space-y-4">
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+      <div className="rounded-3xl border border-slate-700/80 glass-panel-3d p-7 shadow-2xl space-y-5">
+        <div className="flex items-center justify-between border-b border-slate-700/80 pb-3">
           <div>
-            <h3 className="font-bold text-sm text-zinc-100 flex items-center gap-2">
-              <Sliders className="h-4 w-4 text-primary" /> Delivery Channels &amp; Preferences
+            <h3 className="font-bold text-sm text-white flex items-center gap-2">
+              <Sliders className="h-4 w-4 text-cyan-400" /> Delivery Channels &amp; Preferences
             </h3>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-slate-400 mt-0.5">
               Configure how alerts are dispatched across third-party webhooks and communication rails.
             </p>
           </div>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 pt-2">
-          <div className="flex items-center justify-between p-3 rounded-xl border border-zinc-800 bg-zinc-950/60">
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-700/60 bg-slate-900/60 backdrop-blur-md">
             <div>
-              <p className="text-xs font-bold text-zinc-200">Email Digest</p>
-              <p className="text-[10px] text-zinc-500">Weekly operational audit summary</p>
+              <p className="text-sm font-bold text-white">Email Digest</p>
+              <p className="text-xs text-slate-300 font-medium">Weekly operational audit summary</p>
             </div>
             <button
               onClick={() => {
@@ -504,21 +505,21 @@ export default function NotificationsPage() {
                 showToast("Email preference updated.");
               }}
               className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                prefs.emailSummary ? "bg-primary" : "bg-zinc-800"
+                prefs.emailSummary ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-slate-800"
               }`}
             >
               <div
-                className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
                   prefs.emailSummary ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl border border-zinc-800 bg-zinc-950/60">
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-700/60 bg-slate-900/60 backdrop-blur-md">
             <div>
-              <p className="text-xs font-bold text-zinc-200">Slack / Discord Webhook</p>
-              <p className="text-[10px] text-zinc-500">Live events posted to developer channel</p>
+              <p className="text-sm font-bold text-white">Slack / Discord Webhook</p>
+              <p className="text-xs text-slate-300 font-medium">Live events posted to developer channel</p>
             </div>
             <button
               onClick={() => {
@@ -526,21 +527,21 @@ export default function NotificationsPage() {
                 showToast("Slack webhook preference updated.");
               }}
               className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                prefs.slackWebhook ? "bg-primary" : "bg-zinc-800"
+                prefs.slackWebhook ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-slate-800"
               }`}
             >
               <div
-                className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
                   prefs.slackWebhook ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl border border-zinc-800 bg-zinc-950/60">
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-700/60 bg-slate-900/60 backdrop-blur-md">
             <div>
-              <p className="text-xs font-bold text-zinc-200">P0 SMS Emergency Alert</p>
-              <p className="text-[10px] text-zinc-500">Instant SMS on critical security triggers</p>
+              <p className="text-sm font-bold text-white">P0 SMS Emergency Alert</p>
+              <p className="text-xs text-slate-300 font-medium">Instant SMS on critical security triggers</p>
             </div>
             <button
               onClick={() => {
@@ -548,21 +549,21 @@ export default function NotificationsPage() {
                 showToast("SMS emergency alert preference updated.");
               }}
               className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                prefs.smsAlerts ? "bg-primary" : "bg-zinc-800"
+                prefs.smsAlerts ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-slate-800"
               }`}
             >
               <div
-                className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
                   prefs.smsAlerts ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
           </div>
 
-          <div className="flex items-center justify-between p-3 rounded-xl border border-zinc-800 bg-zinc-950/60">
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-700/60 bg-slate-900/60 backdrop-blur-md">
             <div>
-              <p className="text-xs font-bold text-zinc-200">Browser Push Notifications</p>
-              <p className="text-[10px] text-zinc-500">Desktop notifications when tab is backgrounded</p>
+              <p className="text-sm font-bold text-white">Browser Push Notifications</p>
+              <p className="text-xs text-slate-300 font-medium">Desktop notifications when tab is backgrounded</p>
             </div>
             <button
               onClick={() => {
@@ -570,11 +571,11 @@ export default function NotificationsPage() {
                 showToast("Browser push preference updated.");
               }}
               className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                prefs.browserPush ? "bg-primary" : "bg-zinc-800"
+                prefs.browserPush ? "bg-gradient-to-r from-cyan-500 to-blue-600" : "bg-slate-800"
               }`}
             >
               <div
-                className={`w-5 h-5 rounded-full bg-white transition-transform ${
+                className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
                   prefs.browserPush ? "translate-x-5" : "translate-x-0"
                 }`}
               />
@@ -583,59 +584,59 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* Detail Inspection Modal */}
+      {/* Detail Inspection Modal with 3D Spatial Tilt */}
       {selectedNotification && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-xl p-4 animate-in fade-in [perspective:1200px]"
           onClick={() => setSelectedNotification(null)}
         >
           <div
-            className="relative w-full max-w-lg rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl space-y-4"
+            className="relative w-full max-w-lg rounded-3xl border border-slate-700/80 glass-panel-3d p-7 shadow-[0_25px_60px_-15px_rgba(2,6,23,0.9)] space-y-5 [transform:rotateX(2deg)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-zinc-900 border border-zinc-800">
+            <div className="flex items-start justify-between border-b border-slate-700/80 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-slate-800/80 border border-slate-700/80 text-cyan-400">
                   {getCategoryIcon(selectedNotification.category)}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-zinc-100">
+                  <h3 className="text-sm font-bold text-white">
                     {selectedNotification.title}
                   </h3>
-                  <span className="text-[10px] text-zinc-500 font-mono">
+                  <span className="text-xs text-slate-400 font-mono font-medium">
                     ID: {selectedNotification.id} • {selectedNotification.timestamp}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedNotification(null)}
-                className="text-zinc-500 hover:text-zinc-300 text-xs"
+                className="p-1.5 rounded-xl border border-slate-700/80 bg-slate-800/80 text-slate-400 hover:text-white text-xs"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-zinc-300">
+            <p className="text-sm text-slate-200 leading-relaxed font-normal">
               {selectedNotification.message}
             </p>
 
             {selectedNotification.actionPayload && (
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">
                   Associated Payload &amp; Audit Data
                 </label>
-                <div className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 font-mono text-xs text-emerald-400 break-all select-all">
+                <div className="p-3.5 rounded-2xl bg-slate-950/90 border border-slate-800 font-mono text-xs text-cyan-400 break-all select-all shadow-inner">
                   {selectedNotification.actionPayload}
                 </div>
               </div>
             )}
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-zinc-800">
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-700/80">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setSelectedNotification(null)}
-                className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs"
+                className="border-slate-700/80 bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-mono"
               >
                 Close
               </Button>
@@ -648,7 +649,7 @@ export default function NotificationsPage() {
                   );
                   setSelectedNotification(null);
                 }}
-                className="font-bold text-xs shadow-lg shadow-primary/20"
+                className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white font-bold text-xs shadow-[0_0_20px_rgba(6,182,212,0.35)]"
               >
                 Copy Payload
               </Button>

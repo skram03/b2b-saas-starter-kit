@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, BookOpen, Terminal, Key, ShieldCheck, CheckCircle2, Copy, Check, Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card3D } from "@/components/shared/card-3d";
+import { Spatial3DBackground } from "@/components/shared/spatial-3d-bg";
 
 export default function DocsPage() {
   const [copiedStep, setCopiedStep] = useState<number | null>(null);
@@ -16,15 +17,18 @@ export default function DocsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#05070a] text-zinc-100 selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-hidden">
+    <div className="min-h-screen text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-hidden">
+      {/* 3D Animated Spatial Background Canvas */}
+      <Spatial3DBackground />
+
       {/* 3D Cybernetic Background */}
-      <div className="absolute inset-0 isometric-grid-bg opacity-25 pointer-events-none -z-10" />
+      <div className="fixed inset-0 isometric-grid-bg opacity-25 pointer-events-none -z-10" />
 
       {/* Volumetric Radial Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-gradient-to-b from-cyan-500/15 via-indigo-600/10 to-transparent blur-[160px] pointer-events-none -z-10" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-cyan-500/20 via-indigo-600/15 to-transparent blur-[160px] pointer-events-none -z-10" />
 
       {/* Header */}
-      <header className="border-b border-zinc-800/80 py-4 px-6 sticky top-0 z-40 bg-zinc-950/80 backdrop-blur-2xl">
+      <header className="border-b border-slate-700/80 py-4 px-6 sticky top-0 z-40 bg-slate-900/80 backdrop-blur-2xl">
         <div className="container mx-auto max-w-5xl flex items-center justify-between">
           <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold font-mono text-zinc-400 hover:text-cyan-400 transition-colors">
             <ArrowLeft className="h-4 w-4" /> &larr; Return to Showcase
@@ -70,17 +74,17 @@ export default function DocsPage() {
                   <span className="h-3 w-3 rounded-full bg-rose-500/90" />
                   <span className="h-3 w-3 rounded-full bg-amber-500/90" />
                   <span className="h-3 w-3 rounded-full bg-emerald-500/90" />
-                  <span className="ml-2 font-mono text-[11px] text-zinc-500">bash &bull; terminal</span>
+                  <span className="ml-2 font-mono text-xs text-slate-300 font-medium">bash &bull; terminal</span>
                 </div>
                 <button
                   onClick={() => handleCopy("git clone https://github.com/skram03/b2b-saas-starter-kit.git\ncd b2b-saas-starter-kit\nnpm install", 1)}
-                  className="text-xs text-zinc-400 hover:text-cyan-400 font-mono font-bold flex items-center gap-1.5 transition-colors"
+                  className="text-xs text-zinc-300 hover:text-cyan-400 font-mono font-bold flex items-center gap-1.5 transition-colors"
                 >
                   {copiedStep === 1 ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                   <span>{copiedStep === 1 ? "Copied" : "Copy"}</span>
                 </button>
               </div>
-              <pre className="p-4 text-xs font-mono text-cyan-300 bg-zinc-950/60 overflow-x-auto leading-relaxed">
+              <pre className="p-4 text-sm font-mono text-cyan-300 bg-zinc-950/60 overflow-x-auto leading-relaxed">
                 <code>{`git clone https://github.com/skram03/b2b-saas-starter-kit.git\ncd b2b-saas-starter-kit\nnpm install`}</code>
               </pre>
             </Card3D>
@@ -94,7 +98,7 @@ export default function DocsPage() {
               </span>
               <span>Configure Supabase Environment Variables</span>
             </div>
-            <p className="text-xs sm:text-sm text-zinc-400">
+            <p className="text-xs sm:text-sm text-zinc-300">
               Create a Supabase project and copy your API credentials into your local <code className="text-xs bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded text-cyan-400 font-mono">.env.local</code> file:
             </p>
             <Card3D intensity={6} className="p-0 glass-panel-3d overflow-hidden">
@@ -103,17 +107,17 @@ export default function DocsPage() {
                   <span className="h-3 w-3 rounded-full bg-rose-500/90" />
                   <span className="h-3 w-3 rounded-full bg-amber-500/90" />
                   <span className="h-3 w-3 rounded-full bg-emerald-500/90" />
-                  <span className="ml-2 font-mono text-[11px] text-zinc-500">.env.local</span>
+                  <span className="ml-2 font-mono text-xs text-slate-300 font-medium">.env.local</span>
                 </div>
                 <button
                   onClick={() => handleCopy("NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key\nSUPABASE_SERVICE_ROLE_KEY=your-service-role-key", 2)}
-                  className="text-xs text-zinc-400 hover:text-cyan-400 font-mono font-bold flex items-center gap-1.5 transition-colors"
+                  className="text-xs text-zinc-300 hover:text-cyan-400 font-mono font-bold flex items-center gap-1.5 transition-colors"
                 >
                   {copiedStep === 2 ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                   <span>{copiedStep === 2 ? "Copied" : "Copy"}</span>
                 </button>
               </div>
-              <pre className="p-4 text-xs font-mono text-zinc-300 bg-zinc-950/60 overflow-x-auto leading-relaxed">
+              <pre className="p-4 text-sm font-mono text-zinc-200 bg-zinc-950/60 overflow-x-auto leading-relaxed">
                 <code>{`NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co\nNEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key\nSUPABASE_SERVICE_ROLE_KEY=your-service-role-key`}</code>
               </pre>
             </Card3D>
@@ -127,7 +131,7 @@ export default function DocsPage() {
               </span>
               <span>Deploy Database Schema &amp; RLS Policies</span>
             </div>
-            <p className="text-xs sm:text-sm text-zinc-400">
+            <p className="text-xs sm:text-sm text-zinc-300">
               Execute <code className="text-xs bg-zinc-900 border border-zinc-800 px-1.5 py-0.5 rounded text-cyan-400 font-mono">supabase/migrations/20260101000000_initial_b2b_schema.sql</code> inside your Supabase SQL Editor. This sets up organizations, memberships, and multi-tenant RLS rules.
             </p>
           </div>
@@ -146,11 +150,11 @@ export default function DocsPage() {
                   <span className="h-3 w-3 rounded-full bg-rose-500/90" />
                   <span className="h-3 w-3 rounded-full bg-amber-500/90" />
                   <span className="h-3 w-3 rounded-full bg-emerald-500/90" />
-                  <span className="ml-2 font-mono text-[11px] text-zinc-500">npm dev</span>
+                  <span className="ml-2 font-mono text-xs text-slate-300 font-medium">npm dev</span>
                 </div>
                 <button
                   onClick={() => handleCopy("npm run dev", 4)}
-                  className="text-xs text-zinc-400 hover:text-cyan-400 font-mono font-bold flex items-center gap-1.5 transition-colors"
+                  className="text-xs text-zinc-300 hover:text-cyan-400 font-mono font-bold flex items-center gap-1.5 transition-colors"
                 >
                   {copiedStep === 4 ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                   <span>{copiedStep === 4 ? "Copied" : "Copy"}</span>

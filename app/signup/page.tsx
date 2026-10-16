@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card3D } from "@/components/shared/card-3d";
+import { Spatial3DBackground } from "@/components/shared/spatial-3d-bg";
 import { ArrowLeft, Loader2, Sparkles, Box, ShieldCheck } from "lucide-react";
 
 export default function SignupPage() {
@@ -25,17 +26,20 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#05070a] text-zinc-100 p-4 relative overflow-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen flex items-center justify-center text-slate-100 p-4 relative overflow-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+      {/* 3D Animated Spatial Background Canvas */}
+      <Spatial3DBackground />
+
       {/* 3D Cybernetic Background */}
-      <div className="absolute inset-0 isometric-grid-bg opacity-30 pointer-events-none -z-10" />
+      <div className="fixed inset-0 isometric-grid-bg opacity-30 pointer-events-none -z-10" />
 
       {/* Volumetric Radial Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-cyan-500/20 via-indigo-600/15 to-purple-600/20 rounded-full blur-[160px] pointer-events-none -z-10" />
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-cyan-500/20 via-indigo-600/15 to-purple-600/20 rounded-full blur-[160px] pointer-events-none -z-10" />
 
       <div className="w-full max-w-md space-y-4 relative z-10">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs font-bold font-mono text-zinc-400 hover:text-cyan-400 mb-2 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold font-mono text-slate-400 hover:text-cyan-400 mb-2 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" /> &larr; Return to Showcase
         </Link>
@@ -62,7 +66,7 @@ export default function SignupPage() {
                 placeholder="John Doe"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-xs h-10 focus:border-cyan-500/50"
+                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-sm h-11 focus:border-cyan-500/50"
               />
             </div>
             <div className="space-y-1.5 text-left">
@@ -73,7 +77,7 @@ export default function SignupPage() {
                 placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-xs h-10 focus:border-cyan-500/50"
+                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-sm h-11 focus:border-cyan-500/50"
               />
             </div>
             <div className="space-y-1.5 text-left">
@@ -83,7 +87,7 @@ export default function SignupPage() {
                 placeholder="Acme Industrial Corp"
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
-                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-xs h-10 focus:border-cyan-500/50"
+                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-sm h-11 focus:border-cyan-500/50"
               />
             </div>
             <div className="space-y-1.5 text-left">
@@ -94,7 +98,7 @@ export default function SignupPage() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-xs h-10 focus:border-cyan-500/50"
+                className="bg-zinc-950/90 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 font-mono text-sm h-11 focus:border-cyan-500/50"
               />
             </div>
 

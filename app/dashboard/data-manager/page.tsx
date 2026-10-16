@@ -104,7 +104,7 @@ export default function DataManagerPage() {
       accessorKey: "id",
       header: "Code",
       cell: ({ row }) => (
-        <span className="font-mono text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
+        <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800/60 shadow-sm">
           {row.getValue("id")}
         </span>
       ),
@@ -113,7 +113,7 @@ export default function DataManagerPage() {
       accessorKey: "title",
       header: "Asset Title",
       cell: ({ row }) => (
-        <div className="font-semibold text-zinc-100 flex items-center gap-2">
+        <div className="font-bold text-white flex items-center gap-2">
           <span>{row.getValue("title")}</span>
         </div>
       ),
@@ -122,8 +122,8 @@ export default function DataManagerPage() {
       accessorKey: "category",
       header: "Category",
       cell: ({ row }) => (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-zinc-800 text-zinc-300 border border-zinc-700">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-800/90 text-slate-200 border border-slate-700/80 font-mono">
+          <span className="h-2 w-2 rounded-full bg-cyan-400" />
           {row.getValue("category")}
         </span>
       ),
@@ -132,7 +132,7 @@ export default function DataManagerPage() {
       accessorKey: "amount",
       header: "Valuation",
       cell: ({ row }) => (
-        <span className="font-mono font-bold text-zinc-200">
+        <span className="font-mono font-bold text-emerald-400">
           {formatCurrency(row.getValue("amount"))}
         </span>
       ),
@@ -146,7 +146,7 @@ export default function DataManagerPage() {
       accessorKey: "createdAt",
       header: "Recorded",
       cell: ({ row }) => (
-        <span className="text-xs text-zinc-500 font-mono">
+        <span className="text-xs text-slate-400 font-mono">
           {row.getValue("createdAt")}
         </span>
       ),
@@ -160,9 +160,9 @@ export default function DataManagerPage() {
             variant="ghost"
             size="sm"
             onClick={() => setEditingRecord(row.original)}
-            className="h-8 px-2 text-xs text-zinc-300 hover:bg-zinc-800 hover:text-white"
+            className="h-8 px-2 text-xs text-slate-300 hover:bg-slate-800 hover:text-white font-semibold"
           >
-            <Edit3 className="h-3.5 w-3.5 mr-1" /> Edit
+            <Edit3 className="h-3.5 w-3.5 mr-1 text-cyan-400" /> Edit
           </Button>
           <Button
             variant="ghost"
@@ -172,7 +172,7 @@ export default function DataManagerPage() {
                 setData((prev) => prev.filter((item) => item.id !== row.original.id));
               }
             }}
-            className="h-8 px-2 text-xs text-rose-400 hover:bg-rose-950/40 hover:text-rose-300"
+            className="h-8 px-2 text-xs text-rose-400 hover:bg-rose-950/40 hover:text-rose-300 font-semibold"
           >
             <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
           </Button>
@@ -234,12 +234,12 @@ export default function DataManagerPage() {
       {/* 3D Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold mb-2">
-            <Database className="h-3.5 w-3.5" /> TanStack Table v8 Workbench
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-mono font-bold mb-2 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+            <Database className="h-3.5 w-3.5" /> TanStack Table v8 Spatial Workbench
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-zinc-50">Data Manager</h1>
-          <p className="text-sm text-zinc-400 mt-1">
-            Realtime client-side &amp; server-side data grid with multi-column filtering and CSV export.
+          <h1 className="text-3xl font-black tracking-tight text-white drop-shadow-md">3D Data Manager</h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Realtime client-side &amp; server-side spatial data grid with multi-column filtering and CSV export.
           </p>
         </div>
 
@@ -248,14 +248,14 @@ export default function DataManagerPage() {
             variant="outline"
             size="sm"
             onClick={handleExportCSV}
-            className="border-zinc-800 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 gap-1.5 shadow-md"
+            className="border-slate-700/80 bg-slate-800/80 hover:bg-slate-700 text-slate-200 gap-1.5 shadow-md font-mono text-xs"
           >
-            <Download className="h-4 w-4" /> Export CSV ({filteredData.length})
+            <Download className="h-4 w-4 text-cyan-400" /> Export CSV ({filteredData.length})
           </Button>
 
           <Button
             onClick={() => setIsAddModalOpen(true)}
-            className="bg-gradient-to-r from-primary to-indigo-600 font-bold shadow-lg shadow-primary/25 gap-2"
+            className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 font-bold text-xs shadow-[0_0_20px_rgba(6,182,212,0.4)] gap-2 text-white"
           >
             <Plus className="h-4 w-4" /> Add Record
           </Button>
@@ -264,62 +264,86 @@ export default function DataManagerPage() {
 
       {/* 3D KPI Metrics Bar */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900/90 to-zinc-950 p-5 backdrop-blur-xl shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-400 uppercase">Total Valuation</span>
-            <DollarSign className="h-4 w-4 text-primary" />
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
+          <div className="flex items-center justify-between" style={{ transform: "translateZ(20px)" }}>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">Total Valuation</span>
+            <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+              <DollarSign className="h-4 w-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-zinc-50 mt-2">{formatCurrency(totalValuation)}</p>
-          <span className="text-[11px] text-emerald-400 font-semibold mt-1 inline-block">● Calculated Live</span>
-        </div>
+          <p className="text-3xl font-black text-white mt-3 font-mono" style={{ transform: "translateZ(25px)" }}>
+            {formatCurrency(totalValuation)}
+          </p>
+          <span className="text-xs text-cyan-400 font-bold mt-1.5 inline-flex items-center gap-1.5 font-mono" style={{ transform: "translateZ(15px)" }}>
+            <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" /> Live Aggregation
+          </span>
+        </Card3D>
 
-        <div className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900/90 to-zinc-950 p-5 backdrop-blur-xl shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-400 uppercase">Filtered Records</span>
-            <Package className="h-4 w-4 text-indigo-400" />
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent" />
+          <div className="flex items-center justify-between" style={{ transform: "translateZ(20px)" }}>
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">Filtered Records</span>
+            <div className="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+              <Package className="h-4 w-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-zinc-50 mt-2">{filteredData.length} of {data.length}</p>
-          <span className="text-[11px] text-zinc-400 mt-1 inline-block">Active in current view</span>
-        </div>
+          <p className="text-3xl font-black text-white mt-3 font-mono" style={{ transform: "translateZ(25px)" }}>
+            {filteredData.length} <span className="text-base font-semibold text-slate-400">/ {data.length}</span>
+          </p>
+          <span className="text-xs text-indigo-300 font-bold mt-1.5 inline-block font-mono" style={{ transform: "translateZ(15px)" }}>
+            Active in spatial view
+          </span>
+        </Card3D>
 
-        <div className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900/90 to-zinc-950 p-5 backdrop-blur-xl shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-400 uppercase">Active Units</span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
+          <div className="flex items-center justify-between" style={{ transform: "translateZ(20px)" }}>
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">Active Units</span>
+            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <CheckCircle2 className="h-4 w-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-zinc-50 mt-2">{activeCount} Deployed</p>
-          <span className="text-[11px] text-emerald-400 font-semibold mt-1 inline-block">100% Verified</span>
-        </div>
+          <p className="text-3xl font-black text-white mt-3 font-mono" style={{ transform: "translateZ(25px)" }}>
+            {activeCount} Deployed
+          </p>
+          <span className="text-xs text-emerald-400 font-bold mt-1.5 inline-flex items-center gap-1.5 font-mono" style={{ transform: "translateZ(15px)" }}>
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> 100% Verified
+          </span>
+        </Card3D>
 
-        <div className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900/90 to-zinc-950 p-5 backdrop-blur-xl shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-zinc-400 uppercase">PostgreSQL RLS</span>
-            <TrendingUp className="h-4 w-4 text-blue-400" />
+        <Card3D intensity={10} className="p-5 glass-panel-3d relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+          <div className="flex items-center justify-between" style={{ transform: "translateZ(20px)" }}>
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-wider font-mono">Postgres RLS</span>
+            <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
+              <TrendingUp className="h-4 w-4" />
+            </div>
           </div>
-          <p className="text-2xl font-black text-zinc-50 mt-2">Active</p>
-          <span className="text-[11px] text-blue-400 font-semibold mt-1 inline-block">Tenant Partitioned</span>
-        </div>
+          <p className="text-3xl font-black text-white mt-3 font-mono" style={{ transform: "translateZ(25px)" }}>
+            Enforced
+          </p>
+          <span className="text-xs text-blue-400 font-bold mt-1.5 inline-block font-mono" style={{ transform: "translateZ(15px)" }}>
+            Isolated Tenancy
+          </span>
+        </Card3D>
       </div>
 
       {/* 3D Filter & View Controls Toolbar */}
-      <div className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-4 backdrop-blur-xl shadow-lg flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      <div className="rounded-2xl border border-slate-700/60 glass-panel-3d p-4 shadow-xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-cyan-400" />
           <Input
             placeholder="Search code or title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 bg-zinc-950 border-zinc-800 text-zinc-200 placeholder:text-zinc-500 h-9"
+            className="pl-9 bg-slate-900/90 border-slate-700/80 text-white placeholder:text-slate-500 h-9 font-mono text-xs focus-visible:ring-cyan-500/40"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-2.5 text-zinc-500 hover:text-zinc-300"
+              className="absolute right-3 top-2.5 text-slate-400 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
@@ -332,7 +356,7 @@ export default function DataManagerPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="h-9 rounded-lg border border-zinc-800 bg-zinc-950 px-3 text-xs font-semibold text-zinc-300"
+            className="h-9 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500"
           >
             <option value="all">All Categories</option>
             <option value="Heavy Equipment">Heavy Equipment</option>
@@ -345,7 +369,7 @@ export default function DataManagerPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-9 rounded-lg border border-zinc-800 bg-zinc-950 px-3 text-xs font-semibold text-zinc-300"
+            className="h-9 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active</option>
@@ -356,28 +380,30 @@ export default function DataManagerPage() {
           </select>
 
           {/* View Mode Switcher */}
-          <div className="inline-flex rounded-lg border border-zinc-800 bg-zinc-950 p-0.5">
+          <div className="inline-flex rounded-xl border border-slate-700/80 bg-slate-900/90 p-0.5 shadow-inner">
             <button
               onClick={() => setViewMode("table")}
-              className={`p-1.5 rounded-md transition-colors ${
+              className={`p-1.5 px-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                 viewMode === "table"
-                  ? "bg-primary text-white"
-                  : "text-zinc-500 hover:text-zinc-300"
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md"
+                  : "text-slate-400 hover:text-white"
               }`}
               title="Table View"
             >
               <TableIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Table</span>
             </button>
             <button
               onClick={() => setViewMode("cards")}
-              className={`p-1.5 rounded-md transition-colors ${
+              className={`p-1.5 px-2.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                 viewMode === "cards"
-                  ? "bg-primary text-white"
-                  : "text-zinc-500 hover:text-zinc-300"
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md"
+                  : "text-slate-400 hover:text-white"
               }`}
               title="3D Card Grid View"
             >
               <LayoutGrid className="h-4 w-4" />
+              <span className="hidden sm:inline">3D Grid</span>
             </button>
           </div>
         </div>
@@ -416,7 +442,7 @@ export default function DataManagerPage() {
               </div>
 
               <div className="mt-5 pt-3 border-t border-zinc-800/80 flex items-center justify-between" style={{ transform: "translateZ(25px)" }}>
-                <span className="text-[11px] text-zinc-500 font-mono">{item.createdAt}</span>
+                <span className="text-xs text-slate-400 font-mono font-medium">{item.createdAt}</span>
                 <div className="flex gap-2">
                   <Button
                     size="sm"
@@ -454,44 +480,46 @@ export default function DataManagerPage() {
       {/* 3D Add Record Modal */}
       {isAddModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in [perspective:1000px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-xl p-4 animate-in fade-in [perspective:1200px]"
           onClick={() => setIsAddModalOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(3deg)]"
+            className="w-full max-w-md rounded-3xl border border-slate-700/80 glass-panel-3d p-7 shadow-[0_25px_60px_-15px_rgba(2,6,23,0.9)] space-y-6 relative [transform:rotateX(2deg)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-              <div className="flex items-center gap-2 font-bold text-base text-zinc-100">
-                <Layers className="h-5 w-5 text-primary" />
-                <span>Create New Record</span>
+            <div className="flex items-center justify-between border-b border-slate-700/80 pb-4">
+              <div className="flex items-center gap-2.5 font-bold text-base text-white">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                  <Layers className="h-5 w-5" />
+                </div>
+                <span>Create Spatial Asset Record</span>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-zinc-400 hover:text-zinc-100 transition-colors"
+                className="p-1.5 rounded-xl border border-slate-700/80 bg-slate-800/80 text-slate-400 hover:text-white transition-colors"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             <form onSubmit={handleCreateRecord} className="space-y-4">
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Item / Asset Title</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Item / Asset Title</label>
                 <Input
                   required
                   placeholder="e.g. Caterpillar Backhoe 420F"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="bg-zinc-800/80 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                  className="bg-slate-900/90 border-slate-700/80 text-white placeholder:text-slate-500 focus-visible:ring-cyan-500/40"
                 />
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Category</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Category</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  className="w-full h-10 rounded-md border border-zinc-700 bg-zinc-800/80 px-3 py-1 text-sm text-zinc-100"
+                  className="w-full h-10 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 py-1 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500"
                 >
                   <option value="Heavy Equipment">Heavy Equipment</option>
                   <option value="Tools">Tools</option>
@@ -501,11 +529,11 @@ export default function DataManagerPage() {
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Initial Status</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Initial Status</label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full h-10 rounded-md border border-zinc-700 bg-zinc-800/80 px-3 py-1 text-sm text-zinc-100"
+                  className="w-full h-10 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 py-1 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500"
                 >
                   <option value="active">Active</option>
                   <option value="completed">Completed</option>
@@ -515,26 +543,26 @@ export default function DataManagerPage() {
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Valuation ($)</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Valuation ($)</label>
                 <Input
                   type="number"
                   placeholder="2500"
                   value={newAmount}
                   onChange={(e) => setNewAmount(e.target.value)}
-                  className="bg-zinc-800/80 border-zinc-700 text-zinc-100 placeholder:text-zinc-500"
+                  className="bg-slate-900/90 border-slate-700/80 text-white placeholder:text-slate-500 focus-visible:ring-cyan-500/40 font-mono"
                 />
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-3 pt-3 border-t border-slate-700/80">
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1 border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100"
+                  className="flex-1 border-slate-700/80 bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white"
                   onClick={() => setIsAddModalOpen(false)}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="flex-1 font-bold shadow-lg shadow-primary/20">
+                <Button type="submit" className="flex-1 btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white font-bold shadow-[0_0_20px_rgba(6,182,212,0.35)]">
                   Save Record
                 </Button>
               </div>
@@ -546,47 +574,49 @@ export default function DataManagerPage() {
       {/* 3D Edit Record Modal */}
       {editingRecord && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in [perspective:1000px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-xl p-4 animate-in fade-in [perspective:1200px]"
           onClick={() => setEditingRecord(null)}
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-zinc-700 bg-zinc-900/95 backdrop-blur-2xl p-6 shadow-2xl space-y-5 relative [transform:rotateX(3deg)]"
+            className="w-full max-w-md rounded-3xl border border-slate-700/80 glass-panel-3d p-7 shadow-[0_25px_60px_-15px_rgba(2,6,23,0.9)] space-y-6 relative [transform:rotateX(2deg)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-              <div className="flex items-center gap-2 font-bold text-base text-zinc-100">
-                <Edit3 className="h-5 w-5 text-primary" />
+            <div className="flex items-center justify-between border-b border-slate-700/80 pb-4">
+              <div className="flex items-center gap-2.5 font-bold text-base text-white">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                  <Edit3 className="h-5 w-5" />
+                </div>
                 <span>Edit Record ({editingRecord.id})</span>
               </div>
               <button
                 onClick={() => setEditingRecord(null)}
-                className="text-zinc-400 hover:text-zinc-100 transition-colors"
+                className="p-1.5 rounded-xl border border-slate-700/80 bg-slate-800/80 text-slate-400 hover:text-white transition-colors"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
 
             <form onSubmit={handleUpdateRecord} className="space-y-4">
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Item Title</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Item Title</label>
                 <Input
                   required
                   value={editingRecord.title}
                   onChange={(e) =>
                     setEditingRecord({ ...editingRecord, title: e.target.value })
                   }
-                  className="bg-zinc-800/80 border-zinc-700 text-zinc-100"
+                  className="bg-slate-900/90 border-slate-700/80 text-white focus-visible:ring-cyan-500/40"
                 />
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Category</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Category</label>
                 <select
                   value={editingRecord.category}
                   onChange={(e) =>
                     setEditingRecord({ ...editingRecord, category: e.target.value })
                   }
-                  className="w-full h-10 rounded-md border border-zinc-700 bg-zinc-800/80 px-3 py-1 text-sm text-zinc-100"
+                  className="w-full h-10 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 py-1 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500"
                 >
                   <option value="Heavy Equipment">Heavy Equipment</option>
                   <option value="Tools">Tools</option>
@@ -596,13 +626,13 @@ export default function DataManagerPage() {
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Status</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Status</label>
                 <select
                   value={editingRecord.status}
                   onChange={(e) =>
                     setEditingRecord({ ...editingRecord, status: e.target.value })
                   }
-                  className="w-full h-10 rounded-md border border-zinc-700 bg-zinc-800/80 px-3 py-1 text-sm text-zinc-100"
+                  className="w-full h-10 rounded-xl border border-slate-700/80 bg-slate-900/90 px-3 py-1 text-xs font-semibold text-slate-200 focus:outline-none focus:border-cyan-500"
                 >
                   <option value="active">Active</option>
                   <option value="completed">Completed</option>
@@ -613,7 +643,7 @@ export default function DataManagerPage() {
               </div>
 
               <div className="space-y-1.5 text-left">
-                <label className="text-xs font-semibold text-zinc-300">Valuation ($)</label>
+                <label className="text-xs font-bold text-slate-300 font-mono">Valuation ($)</label>
                 <Input
                   type="number"
                   value={editingRecord.amount}
@@ -623,20 +653,20 @@ export default function DataManagerPage() {
                       amount: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="bg-zinc-800/80 border-zinc-700 text-zinc-100"
+                  className="bg-slate-900/90 border-slate-700/80 text-white focus-visible:ring-cyan-500/40 font-mono"
                 />
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-3 pt-3 border-t border-slate-700/80">
                 <Button
                   type="button"
                   variant="outline"
-                  className="flex-1 border-zinc-700 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-zinc-100"
+                  className="flex-1 border-slate-700/80 bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white"
                   onClick={() => setEditingRecord(null)}
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="flex-1 font-bold shadow-lg shadow-primary/20">
+                <Button type="submit" className="flex-1 btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white font-bold shadow-[0_0_20px_rgba(6,182,212,0.35)]">
                   Update Record
                 </Button>
               </div>

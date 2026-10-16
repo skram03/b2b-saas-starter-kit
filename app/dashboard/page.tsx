@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { StatCard } from "@/components/shared/stat-card";
 import { Card3D } from "@/components/shared/card-3d";
+import { Animated3DCube } from "@/components/shared/animated-3d-cube";
 import {
   Users,
   DollarSign,
@@ -17,6 +18,8 @@ import {
   ShieldCheck,
   Clock,
   Radio,
+  Boxes,
+  Waves,
 } from "lucide-react";
 import { StatusBadge } from "@/components/shared/status-badge";
 import Link from "next/link";
@@ -38,7 +41,7 @@ export default function DashboardOverviewPage() {
         .join("\n");
     const link = document.createElement("a");
     link.href = encodeURI(csvContent);
-    link.download = `nexus_telemetry_report_${Date.now()}.csv`;
+    link.download = `nexus_spatial_report_${Date.now()}.csv`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -64,27 +67,32 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      {/* 3D Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-mono font-bold mb-2 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-            <Radio className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
-            <span>3D Realtime Telemetry Grid</span>
+      {/* 3D Page Header with Mini Holographic Cube Symbol */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-6 rounded-3xl glass-panel-3d relative overflow-hidden">
+        <div className="flex items-center gap-5">
+          <div className="relative group shrink-0">
+            <Animated3DCube size={64} />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
-            Command Center
-          </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal">
-            Multi-tenant data isolation, billing throughput, and PostgreSQL kernel telemetry.
-          </p>
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold mb-2 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+              <Radio className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+              <span>Spatial 3D Telemetry Grid</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+              Command Deck
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 mt-1 font-normal">
+              Multi-tenant telemetry, live database partitions, and LemonSqueezy / Stripe billing.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Button
             variant="outline"
             size="sm"
             onClick={handleDownloadReport}
-            className="btn-3d border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 gap-2 text-xs font-bold shadow-md"
+            className="btn-3d border-slate-700 bg-slate-800/90 hover:bg-slate-700 text-slate-200 gap-2 text-xs font-bold shadow-md rounded-xl"
           >
             <Download className="h-4 w-4 text-cyan-400" /> Export CSV
           </Button>
@@ -92,12 +100,12 @@ export default function DashboardOverviewPage() {
           <Button
             size="sm"
             onClick={handleInjectEvent}
-            className="btn-3d bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 text-white font-bold text-xs gap-2 shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+            className="btn-3d bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-extrabold text-xs gap-2 rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.45)]"
           >
             <Sparkles className="h-4 w-4" /> Inject Live Event
           </Button>
 
-          <Button size="sm" asChild className="btn-3d bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700 text-xs font-bold">
+          <Button size="sm" asChild className="btn-3d bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 text-xs font-bold rounded-xl">
             <Link href="/dashboard/data-manager">
               <Plus className="h-4 w-4 text-cyan-400" /> Add Record
             </Link>
@@ -105,7 +113,7 @@ export default function DashboardOverviewPage() {
         </div>
       </div>
 
-      {/* 3D KPI Cards with Interactive Cursor Tilt */}
+      {/* 3D KPI Cards Grid with Interactive Cursor Tilt */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           title="Monthly Recurring Revenue"
@@ -141,15 +149,15 @@ export default function DashboardOverviewPage() {
         />
       </div>
 
-      {/* 3D Interactive Telemetry Stream */}
-      <Card3D intensity={8} className="p-6 glass-panel-3d relative">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/80">
+      {/* 3D Live Event Stream Showcase */}
+      <Card3D intensity={10} className="p-7 glass-panel-3d relative">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-700/60">
           <div className="flex items-center gap-3">
-            <div className="h-3 w-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
+            <div className="h-3.5 w-3.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.9)]" />
             <h3 className="font-black text-base text-white tracking-wide">
               Live PostgreSQL Kernel Events
             </h3>
-            <span className="text-[10px] font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-full border border-cyan-800/60">
+            <span className="text-xs font-mono text-cyan-300 bg-cyan-950/80 px-3.5 py-1 rounded-full border border-cyan-500/40 shadow-sm font-semibold">
               realtime-channel-01
             </span>
           </div>
@@ -161,26 +169,26 @@ export default function DashboardOverviewPage() {
           </Link>
         </div>
 
-        <div className="divide-y divide-zinc-800/60 mt-2">
+        <div className="divide-y divide-slate-700/60 mt-3">
           {activities.map((act) => (
             <div
               key={act.id}
-              className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-zinc-800/40 px-3 rounded-xl transition-all duration-200"
+              className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-800/40 px-3.5 rounded-2xl transition-all duration-200"
             >
               <div className="space-y-1">
-                <p className="font-bold text-sm text-zinc-100 flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                <p className="font-bold text-sm text-slate-100 flex items-center gap-2.5">
+                  <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
                   {act.action}
                 </p>
-                <p className="text-xs text-zinc-400 font-mono">
-                  <span className="text-cyan-400 font-bold">{act.entity}</span> &bull; Triggered by{" "}
-                  <span className="text-zinc-300 font-semibold">{act.user}</span>
+                <p className="text-xs text-slate-400 font-mono">
+                  <span className="text-cyan-300 font-bold">{act.entity}</span> &bull; Triggered by{" "}
+                  <span className="text-slate-200 font-semibold">{act.user}</span>
                 </p>
               </div>
               <div className="flex items-center gap-4 self-end sm:self-center">
                 <StatusBadge status={act.status} />
-                <span className="text-xs text-zinc-500 font-mono flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                <span className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5 text-cyan-400" />
                   {act.time}
                 </span>
               </div>

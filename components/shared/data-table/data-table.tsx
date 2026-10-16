@@ -58,11 +58,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      {/* Table Container with Pro 3D Styling */}
-      <div className="rounded-xl border border-zinc-800 bg-zinc-950/80 shadow-2xl overflow-hidden backdrop-blur-xl">
+      {/* Table Container with Pro 3D Spatial Styling */}
+      <div className="rounded-2xl border border-slate-700/60 glass-panel-3d shadow-[0_20px_50px_rgba(2,6,23,0.7)] overflow-hidden backdrop-blur-2xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-zinc-300">
-            <thead className="bg-zinc-900/90 border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold">
+          <table className="w-full text-left text-sm text-slate-200">
+            <thead className="bg-slate-900/90 border-b border-slate-700/80 text-slate-300 uppercase tracking-wider font-bold text-xs font-mono">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -72,8 +72,8 @@ export function DataTable<TData, TValue>({
                     return (
                       <th
                         key={header.id}
-                        className={`h-11 px-4 align-middle text-left font-bold ${
-                          canSort ? "cursor-pointer select-none hover:text-zinc-100" : ""
+                        className={`h-12 px-5 align-middle text-left font-bold ${
+                          canSort ? "cursor-pointer select-none hover:text-cyan-400 transition-colors" : ""
                         }`}
                         onClick={header.column.getToggleSortingHandler()}
                       >
@@ -84,13 +84,13 @@ export function DataTable<TData, TValue>({
                               header.getContext()
                             )}
                             {canSort && (
-                              <span className="text-zinc-500">
+                              <span className="text-slate-500">
                                 {isSorted === "asc" ? (
-                                  <ChevronUp className="h-3.5 w-3.5 text-primary" />
+                                  <ChevronUp className="h-3.5 w-3.5 text-cyan-400" />
                                 ) : isSorted === "desc" ? (
-                                  <ChevronDown className="h-3.5 w-3.5 text-primary" />
+                                  <ChevronDown className="h-3.5 w-3.5 text-cyan-400" />
                                 ) : (
-                                  <ArrowUpDown className="h-3 w-3 opacity-40" />
+                                  <ArrowUpDown className="h-3 w-3 opacity-40 hover:opacity-100" />
                                 )}
                               </span>
                             )}
@@ -102,16 +102,16 @@ export function DataTable<TData, TValue>({
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-slate-800/60">
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="transition-colors hover:bg-zinc-900/60 data-[state=selected]:bg-primary/10"
+                    className="transition-colors hover:bg-slate-800/40 data-[state=selected]:bg-cyan-500/10 group"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="p-4 align-middle">
+                      <td key={cell.id} className="p-4 px-5 align-middle">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
                 <tr>
                   <td
                     colSpan={columns.length}
-                    className="h-28 text-center text-zinc-500 font-medium"
+                    className="h-32 text-center text-slate-500 font-medium"
                   >
                     No matching records found in this view.
                   </td>

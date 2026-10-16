@@ -13,7 +13,7 @@ interface Card3DProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Card3D({
   children,
   className,
-  intensity = 14,
+  intensity = 15,
   glare = true,
   ...props
 }: Card3DProps) {
@@ -41,7 +41,7 @@ export function Card3D({
     if (glare) {
       const glX = (x / rect.width) * 100;
       const glY = (y / rect.height) * 100;
-      setGlarePos({ x: glX, y: glY, opacity: 0.35 });
+      setGlarePos({ x: glX, y: glY, opacity: 0.45 });
     }
   };
 
@@ -59,7 +59,7 @@ export function Card3D({
   return (
     <div
       style={{ perspective: 1200 }}
-      className="relative transition-all duration-200"
+      className="relative transition-all duration-300"
     >
       <div
         ref={cardRef}
@@ -68,33 +68,33 @@ export function Card3D({
         onMouseLeave={handleMouseLeave}
         style={{
           transform: isHovered
-            ? `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`
-            : "rotateX(0deg) rotateY(0deg) translateZ(0px)",
+            ? `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px) scale3d(1.015, 1.015, 1.015)`
+            : "rotateX(0deg) rotateY(0deg) translateZ(0px) scale3d(1, 1, 1)",
           transformStyle: "preserve-3d",
-          transition: isHovered ? "transform 0.08s ease-out" : "transform 0.5s ease-out",
+          transition: isHovered ? "transform 0.08s ease-out" : "transform 0.45s ease-out",
         }}
         className={cn(
-          "relative overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/80 backdrop-blur-xl shadow-2xl",
+          "relative overflow-hidden rounded-3xl glass-panel-3d shadow-2xl",
           className
         )}
         {...props}
       >
-        {/* Dynamic Specular Glare Layer */}
+        {/* Dynamic Specular Caustic Glare */}
         {glare && (
           <div
             className="pointer-events-none absolute inset-0 z-40 transition-opacity duration-300"
             style={{
               opacity: glarePos.opacity,
-              background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.22) 0%, transparent 60%)`,
+              background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(56, 189, 248, 0.35) 0%, rgba(168, 85, 247, 0.15) 30%, transparent 65%)`,
             }}
           />
         )}
 
-        {/* Ambient Top Bevel Sheen */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/25 to-transparent z-30" />
+        {/* Ambient Top Specular Rim */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent z-30" />
 
-        {/* Inner Content with 3D preservation */}
-        <div style={{ transform: "translateZ(20px)", transformStyle: "preserve-3d" }}>
+        {/* Inner Content with 3D Layer Elevation */}
+        <div style={{ transform: "translateZ(25px)", transformStyle: "preserve-3d" }}>
           {children}
         </div>
       </div>
